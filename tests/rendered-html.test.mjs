@@ -37,6 +37,10 @@ test("server-renders the 177-problem ledger with permanent links", async () => {
 
   const html = await response.text();
   assert.match(html, /<title>Prize Problem Ledger \(PPL\)<\/title>/i);
+  assert.match(
+    html,
+    /rel="canonical" href="https:\/\/prizeproblems\.org\/"/,
+  );
   assert.match(html, /The problems are open\.<em>The rewards are real\.<\/em>/);
   assert.match(html, /Search by PPL number or exact statement, compare reward terms/);
   assert.match(html, /PPL 001/);
@@ -85,7 +89,9 @@ test("renders numbered pages and preserves legacy aliases", async () => {
       assert.match(html, /Read the rules &amp; take it on/);
       assert.match(
         html,
-        new RegExp(`rel="canonical" href="[^"]*/problems/${id.slice(-3)}/"`),
+        new RegExp(
+          `rel="canonical" href="https://prizeproblems.org/problems/${id.slice(-3)}/"`,
+        ),
       );
     }
   }

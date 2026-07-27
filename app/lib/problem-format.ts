@@ -1,7 +1,7 @@
 import type { Certainty, PrizeProblem, Verification } from "../data/problems";
 import { catalogSlug, formatCatalogId } from "../data/problem-numbers";
 
-export const SITE_URL = "https://gajjala.in/math-prize-problems";
+export const SITE_URL = "https://prizeproblems.org";
 export const REPOSITORY_URL = "https://github.com/rishigajjala/math-prize-problems";
 export const CATALOG_YEAR = 2026;
 export { formatCatalogId };

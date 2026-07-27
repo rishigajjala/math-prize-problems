@@ -6,7 +6,6 @@ const nextConfig: NextConfig = isGitHubPages
   ? {
       output: "export",
       trailingSlash: true,
-      basePath: "/math-prize-problems",
       typescript: {
         tsconfigPath: "tsconfig.pages.json",
       },

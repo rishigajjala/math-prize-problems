@@ -6,7 +6,7 @@ permanent citation numbers.
 **177 unresolved targets. 177 immutable PPL numbers. One place to compare the
 mathematics, reward terms, status evidence, and primary references.**
 
-[Visit the live catalog](https://gajjala.in/math-prize-problems/)
+[Visit the live catalog](https://prizeproblems.org/)
 
 ## Why this exists
 
@@ -41,7 +41,7 @@ permanent number.
 
 ## Browse and participate
 
-- [Browse all prize problems](https://gajjala.in/math-prize-problems/#catalog)
+- [Browse all prize problems](https://prizeproblems.org/#catalog)
 - [Propose a missing problem](https://github.com/rishigajjala/math-prize-problems/issues/new?template=add-problem.yml)
 - [Correct an existing record](https://github.com/rishigajjala/math-prize-problems/issues/new?template=correct-entry.yml)
 - [Read the contribution guide](CONTRIBUTING.md)

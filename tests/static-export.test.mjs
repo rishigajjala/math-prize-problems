@@ -6,15 +6,13 @@ import test from "node:test";
 
 const outputDirectory = new URL("../out/", import.meta.url);
 const outputPath = fileURLToPath(outputDirectory);
-const pagesOrigin = "https://gajjala.in";
-const pagesBasePath = "/math-prize-problems";
-const pagesUrl = `${pagesOrigin}${pagesBasePath}`;
+const pagesUrl = "https://prizeproblems.org";
 
 function readOutput(path) {
   return readFileSync(new URL(path, outputDirectory), "utf8");
 }
 
-test("exports the catalog under the GitHub Pages project path", () => {
+test("exports the catalog at the custom-domain root", () => {
   const html = readOutput("index.html");
   assert.match(html, /Prize Problem Ledger \(PPL\)/);
   assert.match(html, /PPL 001/);
@@ -28,13 +26,15 @@ test("exports the catalog under the GitHub Pages project path", () => {
   assert.match(html, /Prize value · low first/);
   assert.doesNotMatch(html, /All currencies/);
   assert.match(html, /reference links indexed/);
-  assert.match(html, new RegExp(`${pagesBasePath}/_next/`));
+  assert.match(html, /\/_next\//);
   assert.match(html, new RegExp(`rel="canonical" href="${pagesUrl}/"`));
+  assert.doesNotMatch(html, /(?:href|src)="\/math-prize-problems\//);
+  assert.doesNotMatch(html, /gajjala\.in\/math-prize-problems/);
   assert.doesNotMatch(html, /chatgpt\.site/);
 
   const paths = new Set(
     Array.from(
-      html.matchAll(/href="(\/math-prize-problems\/problems\/\d{3}\/)"/g),
+      html.matchAll(/href="(\/problems\/\d{3}\/)"/g),
       (match) => match[1],
     ),
   );
@@ -44,7 +44,7 @@ test("exports the catalog under the GitHub Pages project path", () => {
     Array.from(
       { length: 177 },
       (_, index) =>
-        `/math-prize-problems/problems/${String(index + 1).padStart(3, "0")}/`,
+        `/problems/${String(index + 1).padStart(3, "0")}/`,
     ),
   );
 });
@@ -54,7 +54,7 @@ test("exports all 177 permanent problem pages", () => {
   const ids = [
     ...new Set(
       Array.from(
-        html.matchAll(/href="\/math-prize-problems\/problems\/(\d{3})\/"/g),
+        html.matchAll(/href="\/problems\/(\d{3})\/"/g),
         (match) => match[1],
       ),
     ),

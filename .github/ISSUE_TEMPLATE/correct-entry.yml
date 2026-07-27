@@ -7,7 +7,7 @@ body:
     attributes:
       label: Problem page
       description: Paste the Prize Problem Ledger URL or permanent ID, such as PPL 017.
-      placeholder: PPL 017 or https://gajjala.in/math-prize-problems/problems/017/
+      placeholder: PPL 017 or https://prizeproblems.org/problems/017/
     validations:
       required: true
   - type: dropdown

@@ -95,21 +95,11 @@ export default function Home() {
   const [query, setQuery] = useState("");
   const [family, setFamily] = useState<FamilyFilter>("All");
   const [field, setField] = useState("All fields");
-  const [currency, setCurrency] = useState("All currencies");
   const [verification, setVerification] = useState<VerificationFilter>("all");
   const [sort, setSort] = useState<SortMode>("prize");
 
   const fields = useMemo(
     () => ["All fields", ...Array.from(new Set(problems.map((item) => item.field))).sort()],
-    [],
-  );
-  const currencies = useMemo(
-    () => [
-      "All currencies",
-      ...Array.from(
-        new Set(problems.flatMap((item) => item.rewards.map((reward) => reward.currency))),
-      ).sort(),
-    ],
     [],
   );
 
@@ -133,8 +123,6 @@ export default function Home() {
         (!needle || haystack.includes(needle)) &&
         (family === "All" || problem.family === family) &&
         (field === "All fields" || problem.field === field) &&
-        (currency === "All currencies" ||
-          problem.rewards.some((reward) => reward.currency === currency)) &&
         (verification === "all" || problem.verification === verification)
       );
     });
@@ -149,21 +137,21 @@ export default function Home() {
       }
       return a.title.localeCompare(b.title);
     });
-  }, [query, family, field, currency, verification, sort]);
+  }, [query, family, field, verification, sort]);
 
   const verifiedCount = problems.filter((item) => item.verification === "verified").length;
   const oldestYear = Math.min(
     ...problems.map((item) => item.openSince || 9999).filter((year) => year < 9999),
   );
-  const listedCurrencies = new Set(
-    problems.flatMap((item) => item.rewards.map((reward) => reward.currency)),
-  ).size;
+  const indexedReferences = problems.reduce(
+    (total, problem) => total + referenceCount(problem),
+    0,
+  );
 
   const resetFilters = () => {
     setQuery("");
     setFamily("All");
     setField("All fields");
-    setCurrency("All currencies");
     setVerification("all");
     setSort("prize");
   };
@@ -264,8 +252,8 @@ export default function Home() {
             <span>status-verified entries</span>
           </div>
           <div>
-            <strong>{listedCurrencies}</strong>
-            <span>reward currencies</span>
+            <strong>{indexedReferences}</strong>
+            <span>reference links indexed</span>
           </div>
           <div>
             <strong>{oldestYear}</strong>
@@ -323,14 +311,6 @@ export default function Home() {
                 <span>Field</span>
                 <select value={field} onChange={(event) => setField(event.target.value)}>
                   {fields.map((item) => (
-                    <option key={item}>{item}</option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                <span>Currency</span>
-                <select value={currency} onChange={(event) => setCurrency(event.target.value)}>
-                  {currencies.map((item) => (
                     <option key={item}>{item}</option>
                   ))}
                 </select>

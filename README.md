@@ -1,8 +1,9 @@
-# Prize Problems — The Open Ledger
+# Prize Problem Ledger (PPL)
 
-An open, source-linked library of mathematical problems with cash rewards.
+An open, source-linked library of mathematical problems with cash rewards and
+permanent citation numbers.
 
-**177 unresolved targets. 177 permanent problem pages. One place to compare the
+**177 unresolved targets. 177 immutable PPL numbers. One place to compare the
 mathematics, reward terms, status evidence, and primary references.**
 
 [Visit the live catalog](https://gajjala.in/math-prize-problems/)
@@ -13,9 +14,9 @@ Prize problems are scattered across institutional pages, personal websites,
 papers, challenge programs, and maintained problem databases. Offers change.
 Problems get solved. Sponsor pages disappear.
 
-Prize Problems turns those fragments into an auditable public collection:
+Prize Problem Ledger turns those fragments into an auditable public collection:
 
-- one stable URL for every problem;
+- one stable number and URL for every problem;
 - exact reward amounts, sponsors, deadlines, and caveats;
 - separate labels for verified, source-stated, renewal-pending, and
   sponsor-reconfirmation records;
@@ -23,6 +24,20 @@ Prize Problems turns those fragments into an auditable public collection:
 - search and sorting by prize value, time open, and reference depth.
 
 The reward is an invitation. The mathematics is the point.
+
+## Permanent problem IDs
+
+Every accepted entry receives an append-only identifier such as **PPL 017**.
+Existing numbers are never changed, reused, or derived from search and sorting
+order. New entries receive the next unused number.
+
+Use the short form in papers, posts, and conversations:
+
+> We solved PPL 017.
+
+The full citation form is `PPL 017: [Problem title] — Prize Problem Ledger`.
+Legacy title-based URLs remain available, while canonical links use the
+permanent number.
 
 ## Browse and participate
 
@@ -75,7 +90,7 @@ The route test verifies the catalog and every indexed `/problems/[id]` page.
 
 - `app/page.tsx` — searchable catalog
 - `app/problems/[id]/page.tsx` — permanent problem dossier
-- `app/data/` — source-linked problem records
+- `app/data/` — source-linked records and the permanent PPL number registry
 - `app/sitemap.ts` — root page plus every problem URL
 - `.github/ISSUE_TEMPLATE/` — structured additions and corrections
 

@@ -1,4 +1,4 @@
-import type { PrizeProblem, RewardOffer } from "./problems";
+import type { PrizeProblemSource, RewardOffer } from "./problems";
 
 const checked = "2026-07-27";
 
@@ -26,7 +26,7 @@ const rule30Rows = [
   },
 ];
 
-const rule30: PrizeProblem[] = rule30Rows.map((row) => ({
+const rule30: PrizeProblemSource[] = rule30Rows.map((row) => ({
   id: row.id,
   title: row.title,
   family: "Independent",
@@ -105,7 +105,7 @@ const althoferRows: Array<{
   },
 ];
 
-const althofer: PrizeProblem[] = althoferRows.map((row) => ({
+const althofer: PrizeProblemSource[] = althoferRows.map((row) => ({
   id: row.id,
   title: row.title,
   family: "Independent",
@@ -163,7 +163,7 @@ const goldbachRows = [
   },
 ];
 
-const goldbach: PrizeProblem[] = goldbachRows.map((row) => ({
+const goldbach: PrizeProblemSource[] = goldbachRows.map((row) => ({
   id: row.id,
   title: `Let’s Prove Goldbach · ${row.title}`,
   family: "Independent",
@@ -213,7 +213,7 @@ const proximityRows = [
   },
 ];
 
-const proximity: PrizeProblem[] = proximityRows.map((row) => ({
+const proximity: PrizeProblemSource[] = proximityRows.map((row) => ({
   id: row.id,
   title: row.title,
   family: "Institutional",
@@ -264,7 +264,7 @@ const poseidonCollisionRewards: RewardOffer[] = [
   note: "Nested milestones: a stronger collision also meets weaker thresholds, and the rules do not clearly guarantee stacked payouts.",
 }));
 
-const poseidonCollision: PrizeProblem = {
+const poseidonCollision: PrizeProblemSource = {
   id: "poseidon-koalabear-partial-collision",
   title: "Poseidon1/KoalaBear partial-collision milestones",
   family: "Institutional",
@@ -284,7 +284,7 @@ const poseidonCollision: PrizeProblem = {
   rulesUrl: poseidonSource,
 };
 
-const poseidonZeroTest: PrizeProblem = {
+const poseidonZeroTest: PrizeProblemSource = {
   id: "poseidon-zero-test-record-2026",
   title: "Poseidon 2026 zero-test record",
   family: "Institutional",
@@ -324,7 +324,7 @@ const poseidonAttackRows = [
   { id: "poseidon-31-reduced-round", title: "Poseidon-31" },
 ];
 
-const poseidonAttacks: PrizeProblem[] = poseidonAttackRows.map((row) => ({
+const poseidonAttacks: PrizeProblemSource[] = poseidonAttackRows.map((row) => ({
   id: row.id,
   title: `${row.title} reduced-round attack`,
   family: "Institutional",
@@ -365,7 +365,7 @@ const mimcRows = [
   { id: "mimc-bls12-381-collision", title: "BLS12-381", fieldTag: "BLS12-381" },
 ];
 
-const mimc: PrizeProblem[] = mimcRows.map((row) => ({
+const mimc: PrizeProblemSource[] = mimcRows.map((row) => ({
   id: row.id,
   title: `MiMC collision over ${row.title}`,
   family: "Institutional",
@@ -398,7 +398,7 @@ const mimc: PrizeProblem[] = mimcRows.map((row) => ({
 }));
 
 const hagerSource = "https://people.clas.ufl.edu/hager/files/prize.pdf";
-const hager: PrizeProblem = {
+const hager: PrizeProblemSource = {
   id: "hager-reverse-markov-quadrature",
   title: "Hager · Reverse-Markov quadrature conjecture",
   family: "Independent",
@@ -453,7 +453,7 @@ const eccRows = [
   { id: "eccp-359", label: "ECCp-359", amount: 100_000, description: "prime-field, 359-bit level" },
 ];
 
-const ecc: PrizeProblem[] = eccRows.map((row) => ({
+const ecc: PrizeProblemSource[] = eccRows.map((row) => ({
   id: `certicom-${row.id}`,
   title: `Certicom ECC challenge · ${row.label}`,
   family: "Institutional",
@@ -492,7 +492,7 @@ const ecc: PrizeProblem[] = eccRows.map((row) => ({
   ],
 }));
 
-const rc5: PrizeProblem = {
+const rc5: PrizeProblemSource = {
   id: "distributed-net-rc5-72",
   title: "distributed.net RC5-72 key recovery",
   family: "Institutional",
@@ -525,7 +525,7 @@ const rc5: PrizeProblem = {
   rulesUrl: "https://blogs.distributed.net/2008/09/08/02/09/bovine/",
 };
 
-export const expandedComputationalProblems: PrizeProblem[] = [
+export const expandedComputationalProblems: PrizeProblemSource[] = [
   ...rule30,
   ...althofer,
   ...goldbach,

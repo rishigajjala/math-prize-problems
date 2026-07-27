@@ -1,4 +1,4 @@
-/** Cloudflare Worker entry point for the Prize Problems site. */
+/** Cloudflare Worker entry point for the Prize Problem Ledger site. */
 import { handleImageOptimization, DEFAULT_DEVICE_SIZES, DEFAULT_IMAGE_SIZES } from "vinext/server/image-optimization";
 import handler from "vinext/server/app-router-entry";
 

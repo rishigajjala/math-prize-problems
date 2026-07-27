@@ -13,6 +13,7 @@ import {
 import {
   REPOSITORY_URL,
   ageLabel,
+  formatCatalogId,
   humanizeMath,
   problemPath,
   verificationLabel,
@@ -24,20 +25,22 @@ type VerificationFilter = "all" | Verification;
 
 const familyFilters: FamilyFilter[] = ["All", "Institutional", "Erdős", "Independent"];
 
-function ProblemCard({
-  problem,
-  rank,
-}: {
-  problem: PrizeProblem;
-  rank: number;
-}) {
+function ProblemCard({ problem }: { problem: PrizeProblem }) {
   const reward = topReward(problem);
+  const catalogId = formatCatalogId(problem.catalogNumber);
 
   return (
     <article className={`problem-card family-${problem.family.toLowerCase()}`}>
       <div className="card-rail" aria-hidden="true" />
       <div className="card-topline">
-        <span className="index-number">{String(rank + 1).padStart(2, "0")}</span>
+        <Link
+          className="catalog-number"
+          href={problemPath(problem)}
+          prefetch={false}
+          aria-label={`${catalogId}: ${problem.title}`}
+        >
+          {catalogId}
+        </Link>
         <span className="family-label">
           {problem.collection ? `${problem.family} · ${problem.collection}` : problem.family}
         </span>
@@ -83,9 +86,9 @@ function ProblemCard({
         className="open-dossier"
         href={problemPath(problem)}
         prefetch={false}
-        aria-label={`Open the permanent page for ${problem.title}`}
+        aria-label={`Open ${catalogId}: ${problem.title}`}
       >
-        Problem page <span aria-hidden="true">↗</span>
+        Open {catalogId} <span aria-hidden="true">↗</span>
       </Link>
     </article>
   );
@@ -107,6 +110,8 @@ export default function Home() {
     const needle = query.trim().toLocaleLowerCase();
     const filtered = problems.filter((problem) => {
       const haystack = [
+        formatCatalogId(problem.catalogNumber),
+        `Prize Problem ${problem.catalogNumber}`,
         problem.title,
         problem.statement,
         problem.field,
@@ -160,18 +165,18 @@ export default function Home() {
     <div className="site-shell">
       <div className="edition-bar">
         <span>Edition 2026.2</span>
-        <span className="edition-center">A living index of rewarded mathematics</span>
+        <span className="edition-center">Prize Problem Ledger · PPL</span>
         <span>Checked 27.07.2026</span>
       </div>
 
       <header className="site-header">
-        <a className="brand" href="#top" aria-label="Prize Problems home">
+        <a className="brand" href="#top" aria-label="Prize Problem Ledger home">
           <span className="brand-mark" aria-hidden="true">
             ∴
           </span>
           <span>
-            <b>Prize Problems</b>
-            <small>The open ledger</small>
+            <b>Prize Problem Ledger</b>
+            <small>PPL · Open reward index</small>
           </span>
         </a>
         <nav aria-label="Primary navigation">
@@ -191,7 +196,7 @@ export default function Home() {
         <section className="hero" id="top">
           <div className="hero-copy">
             <p className="eyebrow">
-              Open conjectures <span>×</span> real rewards
+              Prize Problem Ledger <span>·</span> PPL
             </p>
             <h1>
               The problems are open.
@@ -200,7 +205,8 @@ export default function Home() {
             <p className="hero-intro">
               An auditable catalog of mathematical conjectures, existence questions,
               computational targets and proof challenges with active cash awards,
-              each with a permanent page, primary sources and clearly separated status labels.
+              each with a permanent PPL number, primary sources and clearly separated status
+              labels. Cite a target simply as “PPL 017.”
             </p>
             <div className="hero-actions">
               <a className="primary-action" href="#catalog">
@@ -245,7 +251,7 @@ export default function Home() {
         <section className="stat-band" aria-label="Catalog statistics">
           <div>
             <strong>{problems.length}</strong>
-            <span>rewarded targets indexed</span>
+            <span>permanently numbered targets</span>
           </div>
           <div>
             <strong>{verifiedCount}</strong>
@@ -264,12 +270,12 @@ export default function Home() {
         <section className="catalog-section" id="catalog">
           <div className="section-intro">
             <div>
-              <p className="eyebrow">The open ledger</p>
+              <p className="eyebrow">PPL catalog</p>
               <h2>Find a problem worth your time.</h2>
             </div>
             <p>
-              Search exact statements, compare reward terms, sort by age, estimated prize
-              value or reference depth, then share a permanent page for any problem.
+              Search by PPL number or exact statement, compare reward terms, sort by age,
+              estimated prize value or reference depth, then share a permanent problem ID.
             </p>
           </div>
 
@@ -279,7 +285,7 @@ export default function Home() {
               <input
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search conjectures, fields, sponsors…"
+                placeholder="Search PPL number, conjecture, field or sponsor…"
                 aria-label="Search prize problems"
               />
               {query && (
@@ -359,8 +365,8 @@ export default function Home() {
           </div>
 
           <div className="catalog-list" aria-live="polite">
-            {visible.map((problem, index) => (
-              <ProblemCard key={problem.id} problem={problem} rank={index} />
+            {visible.map((problem) => (
+              <ProblemCard key={problem.id} problem={problem} />
             ))}
           </div>
 
@@ -418,7 +424,7 @@ export default function Home() {
 
         <section className="sources-section" id="sources">
           <p className="eyebrow">Source hierarchy</p>
-          <h2>Every number should lead somewhere.</h2>
+          <h2>Every PPL number should lead somewhere.</h2>
           <div className="source-hierarchy">
             <div>
               <span>Primary</span>
@@ -445,14 +451,22 @@ export default function Home() {
             ∴
           </span>
           <span>
-            <b>Prize Problems</b>
-            <small>The open ledger</small>
+            <b>Prize Problem Ledger</b>
+            <small>PPL · Open reward index</small>
           </span>
         </a>
         <p>
           A source-first field guide to open mathematics.
           <br />
           Edition 2026.2 · Last catalog check 27 July 2026.
+          <br />
+          <span className="footer-credit">
+            Website maintained by{" "}
+            <a href="https://gajjala.in" target="_blank" rel="noreferrer">
+              Rishikesh Gajjala
+            </a>
+            {" · "}Thanks to Mario Krenn for suggesting the site.
+          </span>
         </p>
         <a href={`${REPOSITORY_URL}/issues/new/choose`} target="_blank" rel="noreferrer">
           Add or improve a problem <span aria-hidden="true">↗</span>

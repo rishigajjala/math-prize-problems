@@ -11,7 +11,7 @@ export default function NotFound() {
         this address.
       </p>
       <Link className="primary-action" href="/#catalog">
-        Browse all prize problems <span aria-hidden="true">→</span>
+        Browse the Prize Problem Ledger <span aria-hidden="true">→</span>
       </Link>
     </main>
   );

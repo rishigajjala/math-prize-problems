@@ -136,6 +136,7 @@ select:focus-visible {
   font-size: 19px;
   font-weight: 600;
   letter-spacing: -0.02em;
+  white-space: nowrap;
 }
 
 .brand small {
@@ -744,16 +745,25 @@ select:focus-visible {
   align-items: center;
   border-bottom: 1px solid var(--line);
   display: flex;
-  gap: 16px;
+  gap: 20px;
   grid-column: 2 / 4;
-  min-height: 46px;
+  min-height: 64px;
   padding: 0 22px;
 }
 
-.index-number {
-  color: var(--ink-soft);
+.catalog-number {
+  color: var(--ink);
+  flex: 0 0 auto;
   font-family: var(--mono);
-  font-size: 8px;
+  font-size: clamp(18px, 2vw, 25px);
+  font-weight: 900;
+  letter-spacing: 0.045em;
+  line-height: 1;
+  min-width: 112px;
+}
+
+.catalog-number:hover {
+  color: var(--blue);
 }
 
 .family-label {
@@ -1139,6 +1149,17 @@ footer > p {
   line-height: 1.7;
   margin: 0;
   text-align: center;
+}
+
+.footer-credit {
+  display: inline-block;
+  margin-top: 6px;
+}
+
+.footer-credit a {
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 footer > a:last-child {
@@ -1542,6 +1563,33 @@ footer > a:last-child {
 
 .problem-hero-copy {
   align-self: center;
+}
+
+.problem-catalog-id {
+  align-items: baseline;
+  border-bottom: 1px solid #53645a;
+  color: var(--acid);
+  display: flex;
+  gap: clamp(18px, 3vw, 42px);
+  margin: 0 0 32px;
+  padding: 0 0 22px;
+}
+
+.problem-catalog-id span {
+  color: #a9b6ae;
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.problem-catalog-id strong {
+  font-family: var(--mono);
+  font-size: clamp(38px, 5vw, 72px);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  line-height: 0.9;
 }
 
 .problem-status-row {
@@ -2294,7 +2342,13 @@ footer > a:last-child {
 
   .card-topline {
     grid-column: 2;
+    gap: 12px;
     padding: 0 14px;
+  }
+
+  .catalog-number {
+    font-size: 16px;
+    min-width: 84px;
   }
 
   .card-body {

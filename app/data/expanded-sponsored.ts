@@ -1,10 +1,10 @@
-import type { PrizeProblem } from "./problems";
+import type { PrizeProblemSource } from "./problems";
 
 const checked = "2026-07-27";
 
 const combinatorSource = "https://www.combinatorprize.org/";
 
-const sCombinator: PrizeProblem = {
+const sCombinator: PrizeProblemSource = {
   id: "wolfram-s-combinator-universality",
   title: "Is the S combinator computation-universal by itself?",
   family: "Institutional",
@@ -39,7 +39,7 @@ const sCombinator: PrizeProblem = {
 const nanongkaiSource = "https://sites.google.com/site/dannanongkai/open";
 const nanongkaiFirst = "The official page reserves each cash prize for the first solver.";
 
-const nanongkai: PrizeProblem[] = [
+const nanongkai: PrizeProblemSource[] = [
   {
     id: "nanongkai-omv",
     title: "Nanongkai · Online Matrix–Vector Multiplication conjecture",
@@ -194,7 +194,7 @@ const nanongkai: PrizeProblem[] = [
 
 const talagrandConditions = "https://michel.talagrand.net/prizes/prizes.pdf";
 
-const talagrand: PrizeProblem[] = [
+const talagrand: PrizeProblemSource[] = [
   {
     id: "talagrand-simple-combinatorics",
     title: "Talagrand · Simple combinatorics / discrete convexity",
@@ -311,7 +311,7 @@ const scottRows = [
   },
 ];
 
-const scott: PrizeProblem[] = scottRows.map((row) => ({
+const scott: PrizeProblemSource[] = scottRows.map((row) => ({
   id: row.id,
   title: `Ridgway Scott · ${row.title}`,
   family: "Institutional",
@@ -347,7 +347,7 @@ const scott: PrizeProblem[] = scottRows.map((row) => ({
 
 const length72Source = "https://sites.google.com/site/professorstevendougherty/length72";
 
-const length72: PrizeProblem = {
+const length72: PrizeProblemSource = {
   id: "type-ii-72-36-16-code",
   title: "Does a Type II [72,36,16] binary code exist?",
   family: "Independent",
@@ -475,7 +475,7 @@ const simonsRows: Array<{
   },
 ];
 
-const simons: PrizeProblem[] = simonsRows.map((row) => ({
+const simons: PrizeProblemSource[] = simonsRows.map((row) => ({
   id: row.id,
   title: `Simons cryptography · ${row.title}`,
   family: "Institutional",
@@ -505,7 +505,7 @@ const simons: PrizeProblem[] = simonsRows.map((row) => ({
   references: row.references,
 }));
 
-export const expandedSponsoredProblems: PrizeProblem[] = [
+export const expandedSponsoredProblems: PrizeProblemSource[] = [
   sCombinator,
   ...nanongkai,
   ...talagrand,

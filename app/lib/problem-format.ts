@@ -1,8 +1,10 @@
 import type { Certainty, PrizeProblem, Verification } from "../data/problems";
+import { catalogSlug, formatCatalogId } from "../data/problem-numbers";
 
 export const SITE_URL = "https://gajjala.in/math-prize-problems";
 export const REPOSITORY_URL = "https://github.com/rishigajjala/math-prize-problems";
 export const CATALOG_YEAR = 2026;
+export { formatCatalogId };
 
 export const verificationLabel: Record<Verification, string> = {
   verified: "Verified open",
@@ -24,15 +26,15 @@ export function ageLabel(problem: PrizeProblem) {
   return `${age} ${age === 1 ? "year" : "years"} open`;
 }
 
-export function problemPath(problemOrId: PrizeProblem | string) {
-  const id = typeof problemOrId === "string" ? problemOrId : problemOrId.id;
-  return `/problems/${encodeURIComponent(id)}`;
+export function problemPath(problem: PrizeProblem) {
+  return `/problems/${catalogSlug(problem.catalogNumber)}`;
 }
 
 export function correctionUrl(problem: PrizeProblem) {
+  const catalogId = formatCatalogId(problem.catalogNumber);
   const params = new URLSearchParams({
     template: "correct-entry.yml",
-    title: `Correction: ${problem.title}`,
+    title: `Correction: ${catalogId} · ${problem.title}`,
     problem: `${SITE_URL}${problemPath(problem)}/`,
   });
   return `${REPOSITORY_URL}/issues/new?${params.toString()}`;

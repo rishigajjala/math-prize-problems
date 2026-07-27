@@ -9,12 +9,14 @@ import {
   topRewardUsd,
   type PrizeProblem,
 } from "../../data/problems";
+import { catalogSlug } from "../../data/problem-numbers";
 import {
   REPOSITORY_URL,
   SITE_URL,
   ageLabel,
   certaintyLabel,
   correctionUrl,
+  formatCatalogId,
   humanizeMath,
   metadataDescription,
   problemPath,
@@ -39,7 +41,10 @@ const verificationNote: Record<PrizeProblem["verification"], string> = {
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return problems.map(({ id }) => ({ id }));
+  return problems.flatMap((problem) => [
+    { id: catalogSlug(problem.catalogNumber) },
+    { id: problem.id },
+  ]);
 }
 
 export async function generateMetadata({ params }: ProblemPageProps): Promise<Metadata> {
@@ -49,32 +54,40 @@ export async function generateMetadata({ params }: ProblemPageProps): Promise<Me
   const description = metadataDescription(problem);
   const path = problemPath(problem);
   const pageUrl = `${SITE_URL}${path}/`;
+  const catalogId = formatCatalogId(problem.catalogNumber);
 
   return {
-    title: problem.title,
+    title: `${catalogId}: ${problem.title}`,
     description,
-    keywords: [...problem.tags, problem.field, "open problem", "mathematics prize"],
+    keywords: [
+      ...problem.tags,
+      problem.field,
+      catalogId,
+      "PPL",
+      "open problem",
+      "mathematics prize",
+    ],
     alternates: { canonical: pageUrl },
     openGraph: {
       type: "article",
-      title: `${problem.title} — Prize Problems`,
+      title: `${catalogId}: ${problem.title} — Prize Problem Ledger`,
       description,
       url: pageUrl,
       modifiedTime: `${problem.lastVerified}T00:00:00Z`,
       images: [
         {
-          url: `${SITE_URL}/og.png`,
+          url: `${SITE_URL}/og-ppl.png`,
           width: 1200,
           height: 630,
-          alt: "Prize Problems — open mathematical targets with cash rewards",
+          alt: "Prize Problem Ledger — permanent PPL numbers for rewarded mathematics",
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: `${problem.title} — Prize Problems`,
+      title: `${catalogId}: ${problem.title} — Prize Problem Ledger`,
       description,
-      images: [`${SITE_URL}/og.png`],
+      images: [`${SITE_URL}/og-ppl.png`],
     },
   };
 }
@@ -97,6 +110,7 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
   const problem = getProblemById((await params).id);
   if (!problem) notFound();
 
+  const catalogId = formatCatalogId(problem.catalogNumber);
   const reward = topReward(problem);
   const index = problems.findIndex((entry) => entry.id === problem.id);
   const previous = index > 0 ? problems[index - 1] : null;
@@ -119,6 +133,7 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "ScholarlyArticle",
+    identifier: catalogId,
     headline: problem.title,
     description: metadataDescription(problem),
     dateModified: problem.lastVerified,
@@ -126,7 +141,8 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
     about: [problem.field, ...problem.tags],
     isPartOf: {
       "@type": "CollectionPage",
-      name: "Prize Problems — The Open Ledger",
+      name: "Prize Problem Ledger",
+      alternateName: "PPL",
       url: SITE_URL,
     },
     citation: references.map((reference) => reference.url),
@@ -135,19 +151,19 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
   return (
     <div className="site-shell problem-page">
       <div className="edition-bar">
-        <span>Problem {String(index + 1).padStart(3, "0")} / {problems.length}</span>
-        <span className="edition-center">A permanent prize-problem dossier</span>
+        <span>{catalogId} / {problems.length} permanent IDs</span>
+        <span className="edition-center">Prize Problem Ledger · PPL</span>
         <span>Checked {problem.lastVerified.replaceAll("-", ".")}</span>
       </div>
 
       <header className="site-header">
-        <Link className="brand" href="/" aria-label="Prize Problems home">
+        <Link className="brand" href="/" aria-label="Prize Problem Ledger home">
           <span className="brand-mark" aria-hidden="true">
             ∴
           </span>
           <span>
-            <b>Prize Problems</b>
-            <small>The open ledger</small>
+            <b>Prize Problem Ledger</b>
+            <small>PPL · Open reward index</small>
           </span>
         </Link>
         <nav aria-label="Primary navigation">
@@ -166,15 +182,21 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
       <main>
         <section className="problem-hero">
           <div className="problem-breadcrumb" aria-label="Breadcrumb">
-            <Link href="/">Prize Problems</Link>
+            <Link href="/">Prize Problem Ledger</Link>
             <span aria-hidden="true">/</span>
             <Link href="/#catalog">{problem.collection || problem.family}</Link>
+            <span aria-hidden="true">/</span>
+            <span>{catalogId}</span>
             <span aria-hidden="true">/</span>
             <span>{problem.title}</span>
           </div>
 
           <div className="problem-hero-grid">
             <div className="problem-hero-copy">
+              <p className="problem-catalog-id">
+                <span>Permanent problem ID</span>
+                <strong>{catalogId}</strong>
+              </p>
               <div className="problem-status-row">
                 <span className={`verification verification-${problem.verification}`}>
                   <span className="status-dot" />
@@ -198,6 +220,10 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
               <strong>{reward?.label || "See terms"}</strong>
               <p>{reward?.sponsor || problem.sourceLabel}</p>
               <dl>
+                <div>
+                  <dt>Permanent ID</dt>
+                  <dd>{catalogId}</dd>
+                </div>
                 <div>
                   <dt>Open since</dt>
                   <dd>{problem.openSince || "Unknown"}</dd>
@@ -316,8 +342,8 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
                 Open the sponsor source <span aria-hidden="true">↗</span>
               </a>
               <small>
-                Prize Problems does not administer awards or guarantee that an offer will be
-                paid.
+                Prize Problem Ledger does not administer awards or guarantee that an offer
+                will be paid.
               </small>
             </section>
 
@@ -354,7 +380,10 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
                 <Link key={entry.id} href={problemPath(entry)}>
                   <span>{entry.field}</span>
                   <strong>{entry.title}</strong>
-                  <small>{topReward(entry)?.label || "See reward terms"} · {ageLabel(entry)}</small>
+                  <small>
+                    {formatCatalogId(entry.catalogNumber)} ·{" "}
+                    {topReward(entry)?.label || "See reward terms"} · {ageLabel(entry)}
+                  </small>
                 </Link>
               ))}
             </div>
@@ -364,7 +393,7 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
         <nav className="problem-pager" aria-label="Adjacent problems">
           {previous ? (
             <Link href={problemPath(previous)} rel="prev">
-              <span>← Previous problem</span>
+              <span>← {formatCatalogId(previous.catalogNumber)}</span>
               <strong>{previous.title}</strong>
             </Link>
           ) : (
@@ -372,7 +401,7 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
           )}
           {next ? (
             <Link href={problemPath(next)} rel="next">
-              <span>Next problem →</span>
+              <span>{formatCatalogId(next.catalogNumber)} →</span>
               <strong>{next.title}</strong>
             </Link>
           ) : (
@@ -387,14 +416,22 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
             ∴
           </span>
           <span>
-            <b>Prize Problems</b>
-            <small>The open ledger</small>
+            <b>Prize Problem Ledger</b>
+            <small>PPL · Open reward index</small>
           </span>
         </Link>
         <p>
-          One permanent page for every indexed target.
+          One permanent PPL number for every indexed target.
           <br />
           Source-first, openly correctable and built to invite serious attempts.
+          <br />
+          <span className="footer-credit">
+            Website maintained by{" "}
+            <a href="https://gajjala.in" target="_blank" rel="noreferrer">
+              Rishikesh Gajjala
+            </a>
+            {" · "}Thanks to Mario Krenn for suggesting the site.
+          </span>
         </p>
         <a href={`${REPOSITORY_URL}/issues/new/choose`} target="_blank" rel="noreferrer">
           Add a prize problem <span aria-hidden="true">↗</span>

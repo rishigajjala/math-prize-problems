@@ -1,6 +1,6 @@
-# Contributing to Prize Problems
+# Contributing to Prize Problem Ledger
 
-Prize Problems is an open, source-first catalog. The quickest way to help is to
+Prize Problem Ledger (PPL) is an open, source-first catalog. The quickest way to help is to
 [propose a problem](https://github.com/rishigajjala/math-prize-problems/issues/new?template=add-problem.yml)
 or [correct an existing entry](https://github.com/rishigajjala/math-prize-problems/issues/new?template=correct-entry.yml).
 
@@ -42,6 +42,12 @@ Records live in:
 Treat every `id` as a permanent public URL slug. Correcting a title must not
 silently change the ID.
 
+Permanent public citation numbers live in `app/data/problem-numbers.ts`.
+Maintainers assign the next unused number after accepting a new record. Never
+renumber an existing problem, reuse a retired number, or derive a number from
+alphabetical or display order. Existing records should be cited as `PPL 017`,
+not by their current position in a filtered list.
+
 Each record should state:
 
 - the exact problem and mathematical field;
@@ -61,6 +67,6 @@ pnpm run build
 pnpm test
 ```
 
-The route test checks that all indexed problem pages render successfully. A
-pull request should also explain the evidence supporting every status or reward
-change.
+The route tests check all numbered pages, legacy URL aliases, and registry
+uniqueness. A pull request should also explain the evidence supporting every
+status or reward change.

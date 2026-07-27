@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for helping expand Prize Problems. A qualifying entry needs a specific open target, a monetary reward, and a source that states the current terms.
+        Thanks for helping expand Prize Problem Ledger (PPL). A qualifying entry needs a specific open target, a monetary reward, and a source that states the current terms. Maintainers assign the next permanent PPL number after acceptance.
   - type: input
     id: title
     attributes:

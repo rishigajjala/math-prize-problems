@@ -5,11 +5,11 @@ import { SITE_URL } from "./lib/problem-format";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Prize Problems — The Open Ledger",
-    template: "%s — Prize Problems",
+    default: "Prize Problem Ledger (PPL)",
+    template: "%s — Prize Problem Ledger",
   },
   description:
-    "A source-linked library of open mathematical problems with documented cash rewards, with one permanent page for every target.",
+    "The Prize Problem Ledger: a source-linked library of rewarded open mathematics with a permanent PPL number for every target.",
   alternates: {
     canonical: `${SITE_URL}/`,
   },
@@ -19,26 +19,26 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    title: "Prize Problems — The Open Ledger",
+    title: "Prize Problem Ledger (PPL)",
     description:
-      "177 open mathematical targets with cash rewards, primary sources and permanent problem pages.",
+      "177 open mathematical targets with cash rewards, primary sources and permanent PPL numbers.",
     url: `${SITE_URL}/`,
-    siteName: "Prize Problems",
+    siteName: "Prize Problem Ledger",
     images: [
       {
-        url: `${SITE_URL}/og.png`,
+        url: `${SITE_URL}/og-ppl.png`,
         width: 1200,
         height: 630,
-        alt: "Prize Problems — 177 open targets, cash rewards and primary sources",
+        alt: "Prize Problem Ledger — PPL 017 and 177 open mathematical targets",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Prize Problems — The Open Ledger",
+    title: "Prize Problem Ledger (PPL)",
     description:
-      "177 open mathematical targets with cash rewards, primary sources and permanent problem pages.",
-    images: [`${SITE_URL}/og.png`],
+      "177 open mathematical targets with cash rewards, primary sources and permanent PPL numbers.",
+    images: [`${SITE_URL}/og-ppl.png`],
   },
 };
 

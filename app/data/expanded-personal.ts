@@ -1,4 +1,4 @@
-import type { PrizeProblem, RewardOffer } from "./problems";
+import type { PrizeProblemSource, RewardOffer } from "./problems";
 
 const checked = "2026-07-27";
 
@@ -21,7 +21,7 @@ const kimberlingReward = (
   note: "Current post-2025 form: a donation to OEIS in the solver’s name.",
 });
 
-const kimberling: PrizeProblem[] = [
+const kimberling: PrizeProblemSource[] = [
   {
     id: "kimberling-kolakoski-five",
     title: "Kimberling #1 · Five Oldenburger–Kolakoski questions",
@@ -175,7 +175,7 @@ const kimberling: PrizeProblem[] = [
         "Prove or refute that whenever d(k)<0, at least one of d(k+1), d(k+2), or d(k+3) is negative.",
     },
   ].map(
-    (row, index): PrizeProblem => ({
+    (row, index): PrizeProblemSource => ({
       id: `kimberling-13-${row.suffix}`,
       title: `Kimberling #13.${index + 1} · ${row.title}`,
       family: "Independent",
@@ -347,7 +347,7 @@ const boyerRows: Array<{
   },
 ];
 
-const boyer: PrizeProblem[] = boyerRows.map((row) => ({
+const boyer: PrizeProblemSource[] = boyerRows.map((row) => ({
   id: row.id,
   title: `Boyer enigma #${row.number} · ${row.title}`,
   family: "Independent",
@@ -422,7 +422,7 @@ const okhotinRows = [
   },
 ];
 
-const okhotin: PrizeProblem[] = okhotinRows.map((row) => ({
+const okhotin: PrizeProblemSource[] = okhotinRows.map((row) => ({
   id: row.id,
   title: `Okhotin · ${row.title}`,
   family: "Independent",
@@ -482,7 +482,7 @@ const sunReward = (
   sourceUrl,
 });
 
-const sun: PrizeProblem[] = [
+const sun: PrizeProblemSource[] = [
   {
     id: "sun-1-3-5",
     title: "Sun · The 1–3–5 conjecture",
@@ -786,7 +786,7 @@ const sun: PrizeProblem[] = [
   },
 ];
 
-export const expandedPersonalProblems: PrizeProblem[] = [
+export const expandedPersonalProblems: PrizeProblemSource[] = [
   ...kimberling,
   ...boyer,
   ...okhotin,

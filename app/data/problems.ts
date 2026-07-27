@@ -2,6 +2,7 @@ import erdosRows from "./erdos.json";
 import { expandedComputationalProblems } from "./expanded-computational";
 import { expandedPersonalProblems } from "./expanded-personal";
 import { expandedSponsoredProblems } from "./expanded-sponsored";
+import { PROBLEM_NUMBERS, catalogSlug } from "./problem-numbers";
 
 export type Verification =
   | "verified"
@@ -23,7 +24,7 @@ export type RewardOffer = {
   note?: string;
 };
 
-export type PrizeProblem = {
+export type PrizeProblemSource = {
   id: string;
   title: string;
   family: "Institutional" | "Erdős" | "Independent";
@@ -49,6 +50,10 @@ export type PrizeProblem = {
   oeis?: string[];
 };
 
+export type PrizeProblem = PrizeProblemSource & {
+  readonly catalogNumber: number;
+};
+
 const clayTerms =
   "Clay does not accept direct submissions. A proposed solution must be published in a qualifying outlet, at least two years must pass, and the work must gain general acceptance in the mathematics community while resolving the complete official formulation.";
 
@@ -63,7 +68,7 @@ const clayReward = (sourceUrl: string): RewardOffer => ({
   rulesUrl: "https://www.claymath.org/millennium-problems/rules/",
 });
 
-const millennium: PrizeProblem[] = [
+const millennium: PrizeProblemSource[] = [
   {
     id: "riemann-hypothesis",
     title: "Riemann hypothesis",
@@ -185,7 +190,7 @@ const millennium: PrizeProblem[] = [
   },
 ];
 
-const institutional: PrizeProblem[] = [
+const institutional: PrizeProblemSource[] = [
   ...millennium,
   {
     id: "beal-conjecture",
@@ -413,16 +418,16 @@ const kcikReward = (): RewardOffer => ({
   note: "Nominally active under the automatic-renewal clause; 2026 intake details are unconfirmed.",
 });
 
-const krennAndKcik: PrizeProblem[] = [
+const krennAndKcik: PrizeProblemSource[] = [
   {
     id: "krenn-inherited-vertex-coloring",
-    title: "Krenn’s inherited vertex-coloring conjecture",
+    title: "Krenn-Gu conjecture",
     family: "Independent",
     type: "conjecture",
     field: "Graph theory",
     tags: ["perfect matchings", "quantum information", "edge coloring"],
     statement:
-      "Resolve the conjecture on monochromatic inherited vertex colorings of edge-colored weighted graphs—either by proof or counterexample.",
+      "Resolve the Krenn-Gu conjecture on monochromatic inherited vertex colorings of edge-colored weighted graphs—either by proof or counterexample.",
     context:
       "The problem emerged from graph-theoretic models of quantum interference. Several substantial special cases are known, but the general conjecture remains open.",
     openSince: 2018,
@@ -671,7 +676,7 @@ const shallitRows: Array<{
   },
 ];
 
-const shallit: PrizeProblem[] = shallitRows.map((row) => ({
+const shallit: PrizeProblemSource[] = shallitRows.map((row) => ({
   id: `shallit-${row.n}`,
   title: `Shallit #${row.n} · ${row.title}`,
   family: "Independent",
@@ -734,7 +739,7 @@ const erdosFieldNames: Record<string, string> = {
   "Set Theory": "Set theory",
 };
 
-const erdos: PrizeProblem[] = (erdosRows as ErdosRow[]).map((row) => ({
+const erdos: PrizeProblemSource[] = (erdosRows as ErdosRow[]).map((row) => ({
   id: row.id,
   title: row.title,
   family: "Erdős",
@@ -764,7 +769,7 @@ const erdos: PrizeProblem[] = (erdosRows as ErdosRow[]).map((row) => ({
   oeis: row.oeis?.filter((value) => value.startsWith("A")),
 }));
 
-export const problems: PrizeProblem[] = [
+const problemSources: PrizeProblemSource[] = [
   ...institutional,
   ...krennAndKcik,
   ...shallit,
@@ -774,7 +779,37 @@ export const problems: PrizeProblem[] = [
   ...expandedSponsoredProblems,
 ].sort((a, b) => a.title.localeCompare(b.title));
 
-const problemsById = new Map(problems.map((problem) => [problem.id, problem]));
+const sourceIds = new Set(problemSources.map((problem) => problem.id));
+const registeredIds = Object.keys(PROBLEM_NUMBERS);
+const registeredNumbers = Object.values(PROBLEM_NUMBERS);
+
+if (
+  sourceIds.size !== problemSources.length ||
+  problemSources.some((problem) => /^\d{3}$/.test(problem.id)) ||
+  registeredIds.length !== problemSources.length ||
+  registeredIds.some((id) => !sourceIds.has(id)) ||
+  new Set(registeredNumbers).size !== registeredNumbers.length ||
+  registeredNumbers.some(
+    (number) =>
+      !Number.isInteger(number) || number < 1 || number > problemSources.length,
+  )
+) {
+  throw new Error(
+    "The permanent PPL number registry must contain each problem exactly once, use unique integers 1 through the catalog size, and reserve three-digit route IDs for PPL numbers.",
+  );
+}
+
+export const problems: PrizeProblem[] = problemSources.map((problem) => ({
+  ...problem,
+  catalogNumber: PROBLEM_NUMBERS[problem.id],
+})).sort((a, b) => a.catalogNumber - b.catalogNumber);
+
+const problemsById = new Map<string, PrizeProblem>();
+
+for (const problem of problems) {
+  problemsById.set(problem.id, problem);
+  problemsById.set(catalogSlug(problem.catalogNumber), problem);
+}
 
 export function getProblemById(id: string) {
   return problemsById.get(id);

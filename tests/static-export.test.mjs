@@ -19,9 +19,12 @@ test("exports the catalog under the GitHub Pages project path", () => {
   assert.match(html, /Prize Problem Ledger \(PPL\)/);
   assert.match(html, /PPL 001/);
   assert.match(html, /PPL 177/);
+  assert.match(html, /<option value="title" selected="">Title · A to Z<\/option>/);
   assert.match(html, /Website maintained by/);
   assert.match(html, /Rishikesh Gajjala/);
-  assert.match(html, /Thanks to Mario Krenn for suggesting the site/);
+  assert.match(html, /Mario Krenn/);
+  assert.match(html, /for suggesting to make this site/);
+  assert.match(html, /href="https:\/\/mariokrenn\.wordpress\.com"/);
   assert.match(html, /Prize value · low first/);
   assert.doesNotMatch(html, /All currencies/);
   assert.match(html, /reference links indexed/);

@@ -430,7 +430,15 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
             <a href="https://gajjala.in" target="_blank" rel="noreferrer">
               Rishikesh Gajjala
             </a>
-            {" · "}Thanks to Mario Krenn for suggesting the site.
+            {" · "}Thanks to{" "}
+            <a
+              href="https://mariokrenn.wordpress.com"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Mario Krenn
+            </a>{" "}
+            for suggesting to make this site.
           </span>
         </p>
         <a href={`${REPOSITORY_URL}/issues/new/choose`} target="_blank" rel="noreferrer">

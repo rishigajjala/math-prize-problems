@@ -99,7 +99,7 @@ export default function Home() {
   const [family, setFamily] = useState<FamilyFilter>("All");
   const [field, setField] = useState("All fields");
   const [verification, setVerification] = useState<VerificationFilter>("all");
-  const [sort, setSort] = useState<SortMode>("prize");
+  const [sort, setSort] = useState<SortMode>("title");
 
   const fields = useMemo(
     () => ["All fields", ...Array.from(new Set(problems.map((item) => item.field))).sort()],
@@ -158,7 +158,7 @@ export default function Home() {
     setFamily("All");
     setField("All fields");
     setVerification("all");
-    setSort("prize");
+    setSort("title");
   };
 
   return (
@@ -342,12 +342,12 @@ export default function Home() {
                   value={sort}
                   onChange={(event) => setSort(event.target.value as SortMode)}
                 >
+                  <option value="title">Title · A to Z</option>
                   <option value="prize">Prize value · high first</option>
                   <option value="prize-low">Prize value · low first</option>
                   <option value="oldest">Time open · longest first</option>
                   <option value="newest">Time open · newest first</option>
                   <option value="references">Reference depth · most first</option>
-                  <option value="title">Title · A to Z</option>
                 </select>
               </label>
             </div>
@@ -465,7 +465,15 @@ export default function Home() {
             <a href="https://gajjala.in" target="_blank" rel="noreferrer">
               Rishikesh Gajjala
             </a>
-            {" · "}Thanks to Mario Krenn for suggesting the site.
+            {" · "}Thanks to{" "}
+            <a
+              href="https://mariokrenn.wordpress.com"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Mario Krenn
+            </a>{" "}
+            for suggesting to make this site.
           </span>
         </p>
         <a href={`${REPOSITORY_URL}/issues/new/choose`} target="_blank" rel="noreferrer">

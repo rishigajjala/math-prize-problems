@@ -41,11 +41,14 @@ test("server-renders the 177-problem ledger with permanent links", async () => {
   assert.match(html, /Search by PPL number or exact statement, compare reward terms/);
   assert.match(html, /PPL 001/);
   assert.match(html, /PPL 177/);
+  assert.match(html, /<option value="title" selected="">Title · A to Z<\/option>/);
   assert.match(html, />177</);
   assert.match(html, /Riemann hypothesis/);
   assert.match(html, /Website maintained by/);
   assert.match(html, /Rishikesh Gajjala/);
-  assert.match(html, /Thanks to Mario Krenn for suggesting the site/);
+  assert.match(html, /Mario Krenn/);
+  assert.match(html, /for suggesting to make this site/);
+  assert.match(html, /href="https:\/\/mariokrenn\.wordpress\.com"/);
   assert.doesNotMatch(html, /react-loading-skeleton|Your site is taking shape/);
 
   const paths = new Set(

@@ -18,7 +18,7 @@ import {
   verificationLabel,
 } from "./lib/problem-format";
 
-type SortMode = "prize" | "oldest" | "newest" | "references" | "title";
+type SortMode = "prize" | "prize-low" | "oldest" | "newest" | "references" | "title";
 type FamilyFilter = "All" | PrizeProblem["family"];
 type VerificationFilter = "all" | Verification;
 
@@ -141,6 +141,7 @@ export default function Home() {
 
     return filtered.sort((a, b) => {
       if (sort === "prize") return topRewardUsd(b) - topRewardUsd(a);
+      if (sort === "prize-low") return topRewardUsd(a) - topRewardUsd(b);
       if (sort === "oldest") return (a.openSince || 9999) - (b.openSince || 9999);
       if (sort === "newest") return (b.openSince || 0) - (a.openSince || 0);
       if (sort === "references") {
@@ -356,6 +357,7 @@ export default function Home() {
                   onChange={(event) => setSort(event.target.value as SortMode)}
                 >
                   <option value="prize">Prize value · high first</option>
+                  <option value="prize-low">Prize value · low first</option>
                   <option value="oldest">Time open · longest first</option>
                   <option value="newest">Time open · newest first</option>
                   <option value="references">Reference depth · most first</option>

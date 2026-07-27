@@ -17,6 +17,7 @@ function readOutput(path) {
 test("exports the catalog under the GitHub Pages project path", () => {
   const html = readOutput("index.html");
   assert.match(html, /Prize Problems — The Open Ledger/);
+  assert.match(html, /Prize value · low first/);
   assert.match(html, new RegExp(`${pagesBasePath}/_next/`));
   assert.match(html, new RegExp(`rel="canonical" href="${pagesUrl}/"`));
   assert.doesNotMatch(html, /chatgpt\.site/);

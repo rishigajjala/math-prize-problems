@@ -7,7 +7,7 @@ body:
     attributes:
       label: Problem page
       description: Paste the Prize Problems page URL or permanent problem ID.
-      placeholder: https://rishigajjala.github.io/math-prize-problems/problems/...
+      placeholder: https://gajjala.in/math-prize-problems/problems/...
     validations:
       required: true
   - type: dropdown

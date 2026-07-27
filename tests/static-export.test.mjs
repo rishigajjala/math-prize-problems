@@ -6,7 +6,7 @@ import test from "node:test";
 
 const outputDirectory = new URL("../out/", import.meta.url);
 const outputPath = fileURLToPath(outputDirectory);
-const pagesOrigin = "https://rishigajjala.github.io";
+const pagesOrigin = "https://gajjala.in";
 const pagesBasePath = "/math-prize-problems";
 const pagesUrl = `${pagesOrigin}${pagesBasePath}`;
 

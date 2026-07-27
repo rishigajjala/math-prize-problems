@@ -5,7 +5,7 @@ An open, source-linked library of mathematical problems with cash rewards.
 **177 unresolved targets. 177 permanent problem pages. One place to compare the
 mathematics, reward terms, status evidence, and primary references.**
 
-[Visit the live catalog](https://rishigajjala.github.io/math-prize-problems/)
+[Visit the live catalog](https://gajjala.in/math-prize-problems/)
 
 ## Why this exists
 
@@ -26,7 +26,7 @@ The reward is an invitation. The mathematics is the point.
 
 ## Browse and participate
 
-- [Browse all prize problems](https://rishigajjala.github.io/math-prize-problems/#catalog)
+- [Browse all prize problems](https://gajjala.in/math-prize-problems/#catalog)
 - [Propose a missing problem](https://github.com/rishigajjala/math-prize-problems/issues/new?template=add-problem.yml)
 - [Correct an existing record](https://github.com/rishigajjala/math-prize-problems/issues/new?template=correct-entry.yml)
 - [Read the contribution guide](CONTRIBUTING.md)

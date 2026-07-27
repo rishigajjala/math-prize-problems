@@ -11,22 +11,22 @@ export const metadata: Metadata = {
   description:
     "A source-linked library of open mathematical problems with documented cash rewards, with one permanent page for every target.",
   alternates: {
-    canonical: "/",
+    canonical: `${SITE_URL}/`,
   },
   icons: {
-    icon: "/favicon.png",
-    shortcut: "/favicon.png",
+    icon: `${SITE_URL}/favicon.png`,
+    shortcut: `${SITE_URL}/favicon.png`,
   },
   openGraph: {
     type: "website",
     title: "Prize Problems — The Open Ledger",
     description:
       "177 open mathematical targets with cash rewards, primary sources and permanent problem pages.",
-    url: "/",
+    url: `${SITE_URL}/`,
     siteName: "Prize Problems",
     images: [
       {
-        url: "/og.png",
+        url: `${SITE_URL}/og.png`,
         width: 1200,
         height: 630,
         alt: "Prize Problems — 177 open targets, cash rewards and primary sources",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     title: "Prize Problems — The Open Ledger",
     description:
       "177 open mathematical targets with cash rewards, primary sources and permanent problem pages.",
-    images: ["/og.png"],
+    images: [`${SITE_URL}/og.png`],
   },
 };
 

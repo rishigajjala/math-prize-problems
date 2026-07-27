@@ -5,7 +5,7 @@ An open, source-linked library of mathematical problems with cash rewards.
 **177 unresolved targets. 177 permanent problem pages. One place to compare the
 mathematics, reward terms, status evidence, and primary references.**
 
-[Visit the live catalog](https://math-prize-ledger-2026.gsmrishi.chatgpt.site)
+[Visit the live catalog](https://rishigajjala.github.io/math-prize-problems/)
 
 ## Why this exists
 
@@ -26,7 +26,7 @@ The reward is an invitation. The mathematics is the point.
 
 ## Browse and participate
 
-- [Browse all prize problems](https://math-prize-ledger-2026.gsmrishi.chatgpt.site/#catalog)
+- [Browse all prize problems](https://rishigajjala.github.io/math-prize-problems/#catalog)
 - [Propose a missing problem](https://github.com/rishigajjala/math-prize-problems/issues/new?template=add-problem.yml)
 - [Correct an existing record](https://github.com/rishigajjala/math-prize-problems/issues/new?template=correct-entry.yml)
 - [Read the contribution guide](CONTRIBUTING.md)
@@ -65,6 +65,8 @@ Validation:
 pnpm run lint
 pnpm run build
 pnpm test
+GITHUB_PAGES=true pnpm run build:pages
+pnpm run test:pages
 ```
 
 The route test verifies the catalog and every indexed `/problems/[id]` page.
@@ -77,5 +79,5 @@ The route test verifies the catalog and every indexed `/problems/[id]` page.
 - `app/sitemap.ts` — root page plus every problem URL
 - `.github/ISSUE_TEMPLATE/` — structured additions and corrections
 
-The site uses [vinext](https://github.com/cloudflare/vinext) and is deployed on
-Cloudflare Workers through Sites.
+The public site is exported as static HTML and deployed automatically to GitHub
+Pages from the `main` branch.

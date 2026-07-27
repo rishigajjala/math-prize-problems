@@ -48,21 +48,22 @@ export async function generateMetadata({ params }: ProblemPageProps): Promise<Me
 
   const description = metadataDescription(problem);
   const path = problemPath(problem);
+  const pageUrl = `${SITE_URL}${path}/`;
 
   return {
     title: problem.title,
     description,
     keywords: [...problem.tags, problem.field, "open problem", "mathematics prize"],
-    alternates: { canonical: path },
+    alternates: { canonical: pageUrl },
     openGraph: {
       type: "article",
       title: `${problem.title} — Prize Problems`,
       description,
-      url: path,
+      url: pageUrl,
       modifiedTime: `${problem.lastVerified}T00:00:00Z`,
       images: [
         {
-          url: "/og.png",
+          url: `${SITE_URL}/og.png`,
           width: 1200,
           height: 630,
           alt: "Prize Problems — open mathematical targets with cash rewards",
@@ -73,7 +74,7 @@ export async function generateMetadata({ params }: ProblemPageProps): Promise<Me
       card: "summary_large_image",
       title: `${problem.title} — Prize Problems`,
       description,
-      images: ["/og.png"],
+      images: [`${SITE_URL}/og.png`],
     },
   };
 }
@@ -121,7 +122,7 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
     headline: problem.title,
     description: metadataDescription(problem),
     dateModified: problem.lastVerified,
-    mainEntityOfPage: `${SITE_URL}${problemPath(problem)}`,
+    mainEntityOfPage: `${SITE_URL}${problemPath(problem)}/`,
     about: [problem.field, ...problem.tags],
     isPartOf: {
       "@type": "CollectionPage",

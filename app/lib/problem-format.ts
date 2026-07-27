@@ -1,6 +1,6 @@
 import type { Certainty, PrizeProblem, Verification } from "../data/problems";
 
-export const SITE_URL = "https://math-prize-ledger-2026.gsmrishi.chatgpt.site";
+export const SITE_URL = "https://rishigajjala.github.io/math-prize-problems";
 export const REPOSITORY_URL = "https://github.com/rishigajjala/math-prize-problems";
 export const CATALOG_YEAR = 2026;
 
@@ -33,7 +33,7 @@ export function correctionUrl(problem: PrizeProblem) {
   const params = new URLSearchParams({
     template: "correct-entry.yml",
     title: `Correction: ${problem.title}`,
-    problem: `${SITE_URL}${problemPath(problem)}`,
+    problem: `${SITE_URL}${problemPath(problem)}/`,
   });
   return `${REPOSITORY_URL}/issues/new?${params.toString()}`;
 }

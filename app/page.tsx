@@ -3,13 +3,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   problems,
+  referenceCount,
   topReward,
   topRewardUsd,
   type PrizeProblem,
   type Verification,
 } from "./data/problems";
 
-type SortMode = "prize" | "oldest" | "newest" | "title";
+type SortMode = "prize" | "oldest" | "newest" | "references" | "title";
 type FamilyFilter = "All" | PrizeProblem["family"];
 type VerificationFilter = "all" | Verification;
 
@@ -19,6 +20,7 @@ const verificationLabel: Record<Verification, string> = {
   verified: "Verified open",
   "source-stated": "Source-stated",
   "renewal-pending": "Renewal check",
+  "reconfirmation-needed": "Reconfirm sponsor",
 };
 
 const certaintyLabel = {
@@ -113,7 +115,9 @@ function ProblemCard({
       <div className="card-rail" aria-hidden="true" />
       <div className="card-topline">
         <span className="index-number">{String(rank + 1).padStart(2, "0")}</span>
-        <span className="family-label">{problem.family}</span>
+        <span className="family-label">
+          {problem.collection ? `${problem.family} · ${problem.collection}` : problem.family}
+        </span>
         <span className={`verification verification-${problem.verification}`}>
           <span className="status-dot" />
           {verificationLabel[problem.verification]}
@@ -217,7 +221,7 @@ function Dossier({
         <div className="dossier-header">
           <div>
             <p className="dossier-eyebrow">
-              {problem.family} · {problem.field}
+              {problem.collection || problem.family} · {problem.field}
             </p>
             <h2 id="dossier-title">{problem.title}</h2>
           </div>
@@ -321,6 +325,11 @@ function Dossier({
                   Claim or award rules <b aria-hidden="true">↗</b>
                 </a>
               )}
+              {problem.references?.map((reference) => (
+                <a key={reference.url} href={reference.url} target="_blank" rel="noreferrer">
+                  {reference.label} <b aria-hidden="true">↗</b>
+                </a>
+              ))}
               {problem.oeis?.map((sequence) => (
                 <a
                   key={sequence}
@@ -376,7 +385,9 @@ export default function Home() {
         problem.statement,
         problem.field,
         problem.family,
+        problem.collection || "",
         ...problem.tags,
+        ...(problem.references?.map((reference) => reference.label) || []),
         ...problem.rewards.map((reward) => reward.sponsor),
       ]
         .join(" ")
@@ -396,6 +407,9 @@ export default function Home() {
       if (sort === "prize") return topRewardUsd(b) - topRewardUsd(a);
       if (sort === "oldest") return (a.openSince || 9999) - (b.openSince || 9999);
       if (sort === "newest") return (b.openSince || 0) - (a.openSince || 0);
+      if (sort === "references") {
+        return referenceCount(b) - referenceCount(a) || a.title.localeCompare(b.title);
+      }
       return a.title.localeCompare(b.title);
     });
   }, [query, family, field, currency, verification, sort]);
@@ -420,9 +434,9 @@ export default function Home() {
   return (
     <div className="site-shell">
       <div className="edition-bar">
-        <span>Edition 2026.1</span>
+        <span>Edition 2026.2</span>
         <span className="edition-center">A living index of rewarded mathematics</span>
-        <span>Checked 26.07.2026</span>
+        <span>Checked 27.07.2026</span>
       </div>
 
       <header className="site-header">
@@ -457,8 +471,8 @@ export default function Home() {
             </h1>
             <p className="hero-intro">
               An auditable catalog of mathematical conjectures, existence questions,
-              computational targets and proof challenges with active—or explicitly
-              renewal-pending—cash awards.
+              computational targets and proof challenges with active cash awards,
+              plus clearly separated renewal-pending and sponsor-reconfirmation records.
             </p>
             <div className="hero-actions">
               <a className="primary-action" href="#catalog">
@@ -526,8 +540,8 @@ export default function Home() {
               <h2>Find a problem worth your time.</h2>
             </div>
             <p>
-              Search exact statements, compare reward terms, sort by age or estimated prize
-              value, and follow every entry back to a primary source.
+              Search exact statements, compare reward terms, sort by age, estimated prize
+              value or reference depth, and follow every entry back to its sources.
             </p>
           </div>
 
@@ -593,6 +607,7 @@ export default function Home() {
                   <option value="verified">Verified open</option>
                   <option value="source-stated">Source-stated</option>
                   <option value="renewal-pending">Renewal check</option>
+                  <option value="reconfirmation-needed">Reconfirm sponsor</option>
                 </select>
               </label>
               <label>
@@ -604,6 +619,7 @@ export default function Home() {
                   <option value="prize">Prize value · high first</option>
                   <option value="oldest">Time open · longest first</option>
                   <option value="newest">Time open · newest first</option>
+                  <option value="references">Reference depth · most first</option>
                   <option value="title">Title · A to Z</option>
                 </select>
               </label>
@@ -668,8 +684,9 @@ export default function Home() {
               <span>03</span>
               <h3>An honest status label</h3>
               <p>
-                “Verified open,” “source-stated” and “renewal check” are deliberately different.
-                Personal and discretionary awards are never presented as escrowed guarantees.
+                “Verified open,” “source-stated,” “renewal check” and “reconfirm sponsor” are
+                deliberately different. Personal and discretionary awards are never presented
+                as escrowed guarantees.
               </p>
             </article>
           </div>
@@ -719,7 +736,7 @@ export default function Home() {
         <p>
           A source-first field guide to open mathematics.
           <br />
-          Edition 2026.1 · Last catalog check 26 July 2026.
+          Edition 2026.2 · Last catalog check 27 July 2026.
         </p>
         <a href="#catalog">
           Back to catalog <span aria-hidden="true">↑</span>

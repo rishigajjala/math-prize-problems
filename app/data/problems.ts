@@ -1,6 +1,13 @@
 import erdosRows from "./erdos.json";
+import { expandedComputationalProblems } from "./expanded-computational";
+import { expandedPersonalProblems } from "./expanded-personal";
+import { expandedSponsoredProblems } from "./expanded-sponsored";
 
-export type Verification = "verified" | "source-stated" | "renewal-pending";
+export type Verification =
+  | "verified"
+  | "source-stated"
+  | "renewal-pending"
+  | "reconfirmation-needed";
 export type Certainty = "institutional" | "documented" | "conditional" | "personal";
 
 export type RewardOffer = {
@@ -20,6 +27,7 @@ export type PrizeProblem = {
   id: string;
   title: string;
   family: "Institutional" | "Erdős" | "Independent";
+  collection?: string;
   type: "conjecture" | "existence" | "computational target" | "verification challenge";
   field: string;
   tags: string[];
@@ -34,6 +42,10 @@ export type PrizeProblem = {
   sourceLabel: string;
   sourceUrl: string;
   rulesUrl?: string;
+  references?: Array<{
+    label: string;
+    url: string;
+  }>;
   oeis?: string[];
 };
 
@@ -231,6 +243,18 @@ const institutional: PrizeProblem[] = [
         rulesUrl: "https://mathprize.net/files/collatz-conjecture-rule-en-20210707.pdf",
         expires: "2031-07-06",
         note: "The legal terms allow amendment or withdrawal and make payment discretionary.",
+      },
+      {
+        label: "€1,000",
+        amount: 1_000,
+        currency: "EUR",
+        sponsor: "Ingo Althöfer",
+        certainty: "personal",
+        terms:
+          "First solution of the ordinary 3n+1 conjecture. Computer-assisted proofs are allowed; legal recourse is excluded. The sponsor’s page gives a deadline of 31 December 2037.",
+        sourceUrl: "https://althofer.de/collatz-prizes.html",
+        rulesUrl: "https://althofer.de/collatz-prizes.html",
+        expires: "2037-12-31",
       },
     ],
     sourceLabel: "Official prize page",
@@ -745,6 +769,9 @@ export const problems: PrizeProblem[] = [
   ...krennAndKcik,
   ...shallit,
   ...erdos,
+  ...expandedPersonalProblems,
+  ...expandedComputationalProblems,
+  ...expandedSponsoredProblems,
 ].sort((a, b) => a.title.localeCompare(b.title));
 
 export const fxToUsd: Record<string, number> = {
@@ -768,4 +795,17 @@ export function topReward(problem: PrizeProblem): RewardOffer | null {
 export function topRewardUsd(problem: PrizeProblem): number {
   const reward = topReward(problem);
   return reward ? rewardUsd(reward) : 0;
+}
+
+export function referenceCount(problem: PrizeProblem): number {
+  const urls = new Set<string>();
+  urls.add(problem.sourceUrl);
+  if (problem.rulesUrl) urls.add(problem.rulesUrl);
+  problem.references?.forEach((reference) => urls.add(reference.url));
+  problem.oeis?.forEach((sequence) => urls.add(`https://oeis.org/${sequence}`));
+  problem.rewards.forEach((reward) => {
+    urls.add(reward.sourceUrl);
+    if (reward.rulesUrl) urls.add(reward.rulesUrl);
+  });
+  return urls.size;
 }

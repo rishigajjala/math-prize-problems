@@ -761,7 +761,10 @@ select:focus-visible {
   font-size: 9px;
   font-weight: 800;
   letter-spacing: 0.11em;
+  overflow: hidden;
+  text-overflow: ellipsis;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .verification {
@@ -790,6 +793,10 @@ select:focus-visible {
 
 .verification-renewal-pending .status-dot {
   background: var(--signal);
+}
+
+.verification-reconfirmation-needed .status-dot {
+  background: #7c3aed;
 }
 
 .card-body {

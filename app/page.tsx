@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
+import { useMemo, useState } from "react";
 import {
   problems,
   referenceCount,
@@ -9,6 +10,13 @@ import {
   type PrizeProblem,
   type Verification,
 } from "./data/problems";
+import {
+  REPOSITORY_URL,
+  ageLabel,
+  humanizeMath,
+  problemPath,
+  verificationLabel,
+} from "./lib/problem-format";
 
 type SortMode = "prize" | "oldest" | "newest" | "references" | "title";
 type FamilyFilter = "All" | PrizeProblem["family"];
@@ -16,97 +24,12 @@ type VerificationFilter = "all" | Verification;
 
 const familyFilters: FamilyFilter[] = ["All", "Institutional", "Erdős", "Independent"];
 
-const verificationLabel: Record<Verification, string> = {
-  verified: "Verified open",
-  "source-stated": "Source-stated",
-  "renewal-pending": "Renewal check",
-  "reconfirmation-needed": "Reconfirm sponsor",
-};
-
-const certaintyLabel = {
-  institutional: "Institutional",
-  documented: "Documented",
-  conditional: "Conditional",
-  personal: "Personal offer",
-};
-
-function ageLabel(problem: PrizeProblem) {
-  if (!problem.openSince) return "Age unknown";
-  const age = 2026 - problem.openSince;
-  return `${age} ${age === 1 ? "year" : "years"} open`;
-}
-
-function humanizeMath(value: string) {
-  return value
-    .replace(/\\\[/g, " ")
-    .replace(/\\\]/g, " ")
-    .replace(/\$/g, "")
-    .replace(/\\mathbb\{N\}/g, "ℕ")
-    .replace(/\\mathbb\{R\}/g, "ℝ")
-    .replace(/\\mathbb\{C\}/g, "ℂ")
-    .replace(/\\mathbb\{Q\}/g, "ℚ")
-    .replace(/\\mathbb\{Z\}/g, "ℤ")
-    .replace(/\\mathcal\{([^}]+)\}/g, "$1")
-    .replace(/\\(?:mathrm|mathbf|text)\{([^}]+)\}/g, "$1")
-    .replace(/\\operatorname\{([^}]+)\}/g, "$1")
-    .replace(/\\binom\{([^{}]+)\}\{([^{}]+)\}/g, "C($1, $2)")
-    .replace(/\\sqrt\{([^{}]+)\}/g, "√($1)")
-    .replace(/\\(?:left|right)\b/g, "")
-    .replace(/\\(?:limsup|liminf|max|min|sup|inf|log|exp|gcd|det|deg)\b/g, (name) =>
-      name.slice(1),
-    )
-    .replace(/\\ldots|\\cdots/g, "…")
-    .replace(/\\lvert/g, "|")
-    .replace(/\\rvert/g, "|")
-    .replace(/\\vert/g, "|")
-    .replace(/\\subseteq/g, "⊆")
-    .replace(/\\subset/g, "⊂")
-    .replace(/\\notin/g, "∉")
-    .replace(/\\in/g, "∈")
-    .replace(/\\neq/g, "≠")
-    .replace(/\\mid/g, "∣")
-    .replace(/\\infty/g, "∞")
-    .replace(/\\geq/g, "≥")
-    .replace(/\\leq/g, "≤")
-    .replace(/\\gg/g, "≫")
-    .replace(/\\ll/g, "≪")
-    .replace(/\\to/g, "→")
-    .replace(/\\sum/g, "∑")
-    .replace(/\\prod/g, "∏")
-    .replace(/\\cup/g, "∪")
-    .replace(/\\cap/g, "∩")
-    .replace(/\\ast/g, "∗")
-    .replace(/\\epsilon/g, "ε")
-    .replace(/\\alpha/g, "α")
-    .replace(/\\beta/g, "β")
-    .replace(/\\gamma/g, "γ")
-    .replace(/\\delta/g, "δ")
-    .replace(/\\phi/g, "φ")
-    .replace(/\\chi/g, "χ")
-    .replace(/\\zeta/g, "ζ")
-    .replace(/\\lambda/g, "λ")
-    .replace(/\\omega/g, "ω")
-    .replace(/\\theta/g, "θ")
-    .replace(/\\tau/g, "τ")
-    .replace(/\\Omega/g, "Ω")
-    .replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g, "($1/$2)")
-    .replace(/\\\{/g, "{")
-    .replace(/\\\}/g, "}")
-    .replace(/\\[,;!]/g, " ")
-    .replace(/\^\{([^{}]+)\}/g, "^($1)")
-    .replace(/_\{([^{}]+)\}/g, "_($1)")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
 function ProblemCard({
   problem,
   rank,
-  onOpen,
 }: {
   problem: PrizeProblem;
   rank: number;
-  onOpen: (problem: PrizeProblem) => void;
 }) {
   const reward = topReward(problem);
 
@@ -127,7 +50,11 @@ function ProblemCard({
       <div className="card-body">
         <div className="card-copy">
           <p className="field-kicker">{problem.field}</p>
-          <h3>{problem.title}</h3>
+          <h3>
+            <Link href={problemPath(problem)} prefetch={false}>
+              {problem.title}
+            </Link>
+          </h3>
           <p className="statement">{humanizeMath(problem.statement)}</p>
           <div className="tag-row" aria-label="Topics">
             {problem.tags.slice(0, 3).map((tag) => (
@@ -152,205 +79,15 @@ function ProblemCard({
         </div>
       </div>
 
-      <button className="open-dossier" onClick={() => onOpen(problem)}>
-        Open dossier <span aria-hidden="true">↗</span>
-      </button>
-    </article>
-  );
-}
-
-function Dossier({
-  problem,
-  onClose,
-}: {
-  problem: PrizeProblem | null;
-  onClose: () => void;
-}) {
-  const closeRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    if (!problem) return;
-    const previousFocus = document.activeElement as HTMLElement | null;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    closeRef.current?.focus();
-
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-      if (event.key !== "Tab") return;
-
-      const dossier = closeRef.current?.closest(".dossier");
-      const focusable = dossier
-        ? Array.from(
-            dossier.querySelectorAll<HTMLElement>(
-              'a[href], button:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
-            ),
-          )
-        : [];
-      if (!focusable.length) return;
-
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = previousOverflow;
-      previousFocus?.focus();
-    };
-  }, [problem, onClose]);
-
-  if (!problem) return null;
-
-  return (
-    <div className="dossier-layer" role="presentation" onMouseDown={onClose}>
-      <aside
-        className="dossier"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="dossier-title"
-        onMouseDown={(event) => event.stopPropagation()}
+      <Link
+        className="open-dossier"
+        href={problemPath(problem)}
+        prefetch={false}
+        aria-label={`Open the permanent page for ${problem.title}`}
       >
-        <div className="dossier-header">
-          <div>
-            <p className="dossier-eyebrow">
-              {problem.collection || problem.family} · {problem.field}
-            </p>
-            <h2 id="dossier-title">{problem.title}</h2>
-          </div>
-          <button
-            ref={closeRef}
-            className="close-button"
-            onClick={onClose}
-            aria-label="Close dossier"
-          >
-            ×
-          </button>
-        </div>
-
-        <div className="dossier-content">
-          <section className="dossier-lead">
-            <span className={`verification verification-${problem.verification}`}>
-              <span className="status-dot" />
-              {verificationLabel[problem.verification]}
-            </span>
-            <p>{humanizeMath(problem.statement)}</p>
-            {problem.context && <p className="context">{humanizeMath(problem.context)}</p>}
-          </section>
-
-          <section className="facts-grid">
-            <div>
-              <span>Open since</span>
-              <strong>{problem.openSince || "Unknown"}</strong>
-              <small>{problem.openSincePrecision}</small>
-            </div>
-            <div>
-              <span>Last checked</span>
-              <strong>{problem.lastVerified.replaceAll("-", ".")}</strong>
-              <small>Catalog verification</small>
-            </div>
-          </section>
-
-          {problem.openSinceNote && (
-            <p className="note-box">
-              <strong>Date note</strong>
-              {problem.openSinceNote}
-            </p>
-          )}
-
-          <section className="dossier-section">
-            <div className="section-heading">
-              <span>01</span>
-              <h3>Reward offers</h3>
-            </div>
-            {problem.rewards.length ? (
-              <div className="reward-list">
-                {problem.rewards.map((reward, index) => (
-                  <article className="reward-offer" key={`${reward.sponsor}-${index}`}>
-                    <div className="reward-heading">
-                      <div>
-                        <strong>{reward.label}</strong>
-                        <span>{reward.sponsor}</span>
-                      </div>
-                      <span className={`certainty certainty-${reward.certainty}`}>
-                        {certaintyLabel[reward.certainty]}
-                      </span>
-                    </div>
-                    <p>{reward.terms}</p>
-                    {reward.expires && <p className="reward-meta">Terms expire {reward.expires}</p>}
-                    {reward.note && <p className="reward-note">{reward.note}</p>}
-                    <div className="reference-links">
-                      <a href={reward.sourceUrl} target="_blank" rel="noreferrer">
-                        Award source ↗
-                      </a>
-                      {reward.rulesUrl && (
-                        <a href={reward.rulesUrl} target="_blank" rel="noreferrer">
-                          Rules ↗
-                        </a>
-                      )}
-                    </div>
-                  </article>
-                ))}
-              </div>
-            ) : (
-              <div className="pending-offer">
-                <strong>No current amount indexed</strong>
-                <p>
-                  The problem remains in the source catalog, but no sortable cash amount is
-                  currently documented. Follow the award source for the latest terms.
-                </p>
-              </div>
-            )}
-          </section>
-
-          <section className="dossier-section">
-            <div className="section-heading">
-              <span>02</span>
-              <h3>References</h3>
-            </div>
-            <div className="source-card">
-              <span>Primary source</span>
-              <a href={problem.sourceUrl} target="_blank" rel="noreferrer">
-                {problem.sourceLabel} <b aria-hidden="true">↗</b>
-              </a>
-              {problem.rulesUrl && (
-                <a href={problem.rulesUrl} target="_blank" rel="noreferrer">
-                  Claim or award rules <b aria-hidden="true">↗</b>
-                </a>
-              )}
-              {problem.references?.map((reference) => (
-                <a key={reference.url} href={reference.url} target="_blank" rel="noreferrer">
-                  {reference.label} <b aria-hidden="true">↗</b>
-                </a>
-              ))}
-              {problem.oeis?.map((sequence) => (
-                <a
-                  key={sequence}
-                  href={`https://oeis.org/${sequence}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  OEIS {sequence} <b aria-hidden="true">↗</b>
-                </a>
-              ))}
-            </div>
-          </section>
-
-          <p className="dossier-disclaimer">
-            Always read the sponsor’s current terms before beginning a claim. “Open” records the
-            best available public status, not a legal guarantee of payment or an assessment of
-            solvability.
-          </p>
-        </div>
-      </aside>
-    </div>
+        Problem page <span aria-hidden="true">↗</span>
+      </Link>
+    </article>
   );
 }
 
@@ -361,7 +98,6 @@ export default function Home() {
   const [currency, setCurrency] = useState("All currencies");
   const [verification, setVerification] = useState<VerificationFilter>("all");
   const [sort, setSort] = useState<SortMode>("prize");
-  const [selected, setSelected] = useState<PrizeProblem | null>(null);
 
   const fields = useMemo(
     () => ["All fields", ...Array.from(new Set(problems.map((item) => item.field))).sort()],
@@ -453,6 +189,9 @@ export default function Home() {
           <a href="#catalog">Catalog</a>
           <a href="#method">Method</a>
           <a href="#sources">Sources</a>
+          <a href={`${REPOSITORY_URL}/issues`} target="_blank" rel="noreferrer">
+            Contribute
+          </a>
         </nav>
         <a className="header-cta" href="#catalog">
           Explore {problems.length}
@@ -472,7 +211,7 @@ export default function Home() {
             <p className="hero-intro">
               An auditable catalog of mathematical conjectures, existence questions,
               computational targets and proof challenges with active cash awards,
-              plus clearly separated renewal-pending and sponsor-reconfirmation records.
+              each with a permanent page, primary sources and clearly separated status labels.
             </p>
             <div className="hero-actions">
               <a className="primary-action" href="#catalog">
@@ -541,7 +280,7 @@ export default function Home() {
             </div>
             <p>
               Search exact statements, compare reward terms, sort by age, estimated prize
-              value or reference depth, and follow every entry back to its sources.
+              value or reference depth, then share a permanent page for any problem.
             </p>
           </div>
 
@@ -639,12 +378,7 @@ export default function Home() {
 
           <div className="catalog-list" aria-live="polite">
             {visible.map((problem, index) => (
-              <ProblemCard
-                key={problem.id}
-                problem={problem}
-                rank={index}
-                onOpen={setSelected}
-              />
+              <ProblemCard key={problem.id} problem={problem} rank={index} />
             ))}
           </div>
 
@@ -738,12 +472,10 @@ export default function Home() {
           <br />
           Edition 2026.2 · Last catalog check 27 July 2026.
         </p>
-        <a href="#catalog">
-          Back to catalog <span aria-hidden="true">↑</span>
+        <a href={`${REPOSITORY_URL}/issues/new/choose`} target="_blank" rel="noreferrer">
+          Add or improve a problem <span aria-hidden="true">↗</span>
         </a>
       </footer>
-
-      <Dossier problem={selected} onClose={() => setSelected(null)} />
     </div>
   );
 }

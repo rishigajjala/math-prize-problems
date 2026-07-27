@@ -1,0 +1,72 @@
+name: Add a prize problem
+description: Propose an open mathematical problem with a documented monetary reward.
+title: "[Add] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping expand Prize Problems. A qualifying entry needs a specific open target, a monetary reward, and a source that states the current terms.
+  - type: input
+    id: title
+    attributes:
+      label: Problem title
+      placeholder: e.g. Riemann hypothesis
+    validations:
+      required: true
+  - type: textarea
+    id: statement
+    attributes:
+      label: Exact problem statement
+      description: State the target precisely enough that a solution could be judged.
+    validations:
+      required: true
+  - type: input
+    id: reward
+    attributes:
+      label: Reward amount and currency
+      placeholder: e.g. $1,000 USD
+    validations:
+      required: true
+  - type: input
+    id: sponsor
+    attributes:
+      label: Sponsor or award-giver
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Primary reward source
+      description: Link to the sponsor, institution, or current rules—not a search-results page.
+      placeholder: https://
+    validations:
+      required: true
+  - type: input
+    id: rules
+    attributes:
+      label: Claim rules
+      description: Add a separate rules link when one exists.
+      placeholder: https://
+  - type: input
+    id: open_since
+    attributes:
+      label: Open since
+      description: Give the year and a source for it if known.
+  - type: textarea
+    id: status
+    attributes:
+      label: Evidence that both the problem and reward remain open
+      description: Include recent status pages, sponsor updates, or literature checks.
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Submission checks
+      options:
+        - label: I checked that the mathematical target is still open.
+          required: true
+        - label: The offer is money, not only points, tokens, a medal, or a general research grant.
+          required: true
+        - label: I searched the existing catalog for duplicates.
+          required: true

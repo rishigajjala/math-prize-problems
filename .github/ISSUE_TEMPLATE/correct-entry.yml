@@ -1,0 +1,48 @@
+name: Correct or update a problem
+description: Report a solved target, changed reward, stronger source, or inaccurate record.
+title: "[Correction] "
+body:
+  - type: input
+    id: problem
+    attributes:
+      label: Problem page
+      description: Paste the Prize Problems page URL or permanent problem ID.
+      placeholder: https://math-prize-ledger-2026.gsmrishi.chatgpt.site/problems/...
+    validations:
+      required: true
+  - type: dropdown
+    id: change
+    attributes:
+      label: What changed?
+      options:
+        - The problem was solved
+        - The reward was claimed
+        - The reward amount or terms changed
+        - The sponsor or deadline needs reconfirmation
+        - A source or statement is inaccurate
+        - A stronger reference is available
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: Explain the correction and the exact catalog change you recommend.
+    validations:
+      required: true
+  - type: input
+    id: evidence
+    attributes:
+      label: Supporting source
+      description: Prefer a sponsor page, paper, official announcement, or maintained database.
+      placeholder: https://
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Source check
+      options:
+        - label: The linked source directly supports this correction.
+          required: true

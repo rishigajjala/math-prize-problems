@@ -774,6 +774,12 @@ export const problems: PrizeProblem[] = [
   ...expandedSponsoredProblems,
 ].sort((a, b) => a.title.localeCompare(b.title));
 
+const problemsById = new Map(problems.map((problem) => [problem.id, problem]));
+
+export function getProblemById(id: string) {
+  return problemsById.get(id);
+}
+
 export const fxToUsd: Record<string, number> = {
   USD: 1,
   EUR: 1.17,

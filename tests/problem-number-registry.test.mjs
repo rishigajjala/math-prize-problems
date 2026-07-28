@@ -4,9 +4,9 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 const EXPECTED_REGISTRY_HASH =
-  "6887d868ea19d1d657c90c40545125961a5a087164bfe6c6c0b754fd77576174";
+  "af03a9a1ef8c988af811c392c171f48f3e28ac4d8ca642f18a92cce9ef74ef66";
 
-test("keeps the original 177 permanent PPL assignments immutable", () => {
+test("locks the 177-entry launch PPL assignments", () => {
   const source = readFileSync(
     new URL("../app/data/problem-numbers.ts", import.meta.url),
     "utf8",
@@ -34,9 +34,11 @@ test("keeps the original 177 permanent PPL assignments immutable", () => {
   assert.equal(
     registryHash,
     EXPECTED_REGISTRY_HASH,
-    "An existing PPL number changed. Append new entries; never renumber or reuse an ID.",
+    "A launch-baseline PPL assignment changed. Append new entries; never renumber or reuse an ID.",
   );
   assert.ok(
     canonicalRegistry.includes("krenn-inherited-vertex-coloring:109"),
   );
+  assert.ok(canonicalRegistry.includes("erdos-104:51"));
+  assert.ok(canonicalRegistry.includes("erdos-1029:82"));
 });

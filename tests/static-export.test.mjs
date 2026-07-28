@@ -52,6 +52,15 @@ test("exports the catalog at the custom-domain root", () => {
     html.matchAll(/<h3><a[^>]*>([^<]+)<\/a><\/h3>/g),
     (match) => match[1],
   );
+  const cardIds = Array.from(
+    html.matchAll(/<a[^>]*class="catalog-number"[^>]*>PPL (\d{3})<\/a>/g),
+    (match) => Number(match[1]),
+  );
+  assert.deepEqual(
+    cardIds.filter((catalogNumber) => catalogNumber <= 177),
+    Array.from({ length: 177 }, (_, index) => index + 1),
+    "the 177 launch PPL IDs use their frozen natural A–Z order",
+  );
   const erdosNumbers = cardTitles
     .filter((title) => title.startsWith("Erdős Problem #"))
     .map((title) => Number(title.match(/#(\d+)/)?.[1]));
@@ -119,10 +128,13 @@ test("keeps all 177 legacy slug pages as aliases to numbered pages", () => {
 
   assert.match(readOutput("problems/005/index.html"), /Beal conjecture/);
   assert.match(readOutput("problems/033/index.html"), /Erdős Problem #1/);
-  assert.match(readOutput("problems/035/index.html"), /Erdős Problem #1029/);
-  assert.match(readOutput("problems/036/index.html"), /Erdős Problem #104/);
+  assert.match(readOutput("problems/051/index.html"), /Erdős Problem #104/);
+  assert.match(readOutput("problems/082/index.html"), /Erdős Problem #1029/);
+  assert.match(readOutput("problems/097/index.html"), /Kimberling #2/);
   assert.match(readOutput("problems/109/index.html"), /Krenn-Gu conjecture/);
+  assert.match(readOutput("problems/129/index.html"), /Poseidon-31/);
   assert.match(readOutput("problems/138/index.html"), /Riemann hypothesis/);
+  assert.match(readOutput("problems/143/index.html"), /Shallit #2/);
   assert.match(readOutput("problems/177/index.html"), /Yang–Mills existence and mass gap/);
   assert.match(
     readOutput("problems/riemann-hypothesis/index.html"),

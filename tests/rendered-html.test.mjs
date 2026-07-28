@@ -68,6 +68,15 @@ test("server-renders the 177-problem ledger with permanent links", async () => {
     html.matchAll(/<h3><a[^>]*>([^<]+)<\/a><\/h3>/g),
     (match) => match[1],
   );
+  const cardIds = Array.from(
+    html.matchAll(/<a[^>]*class="catalog-number"[^>]*>PPL (\d{3})<\/a>/g),
+    (match) => Number(match[1]),
+  );
+  assert.deepEqual(
+    cardIds.filter((catalogNumber) => catalogNumber <= 177),
+    Array.from({ length: 177 }, (_, index) => index + 1),
+    "the 177 launch PPL IDs use their frozen natural A–Z order",
+  );
   const erdosNumbers = cardTitles
     .filter((title) => title.startsWith("Erdős Problem #"))
     .map((title) => Number(title.match(/#(\d+)/)?.[1]));
@@ -82,6 +91,16 @@ test("renders numbered pages and preserves legacy aliases", async () => {
   const cases = [
     { paths: ["/problems/138", "/problems/riemann-hypothesis"], id: "PPL 138" },
     { paths: ["/problems/033", "/problems/erdos-1"], id: "PPL 033" },
+    {
+      paths: ["/problems/051", "/problems/erdos-104"],
+      id: "PPL 051",
+      title: "Erdős Problem #104",
+    },
+    {
+      paths: ["/problems/082", "/problems/erdos-1029"],
+      id: "PPL 082",
+      title: "Erdős Problem #1029",
+    },
     {
       paths: ["/problems/109", "/problems/krenn-inherited-vertex-coloring"],
       id: "PPL 109",

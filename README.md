@@ -28,8 +28,9 @@ The reward is an invitation. The mathematics is the point.
 ## Permanent problem IDs
 
 Every accepted entry receives an append-only identifier such as **PPL 017**.
-Existing numbers are never changed, reused, or derived from search and sorting
-order. New entries receive the next unused number.
+The founding 177-entry registry was finalized once in natural title order
+before launch. That launch mapping is the immutable baseline: its numbers are
+never changed or reused, and new entries receive the next unused number.
 
 Use the short form in papers, posts, and conversations:
 

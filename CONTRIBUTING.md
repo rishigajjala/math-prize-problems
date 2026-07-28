@@ -43,10 +43,11 @@ Treat every `id` as a permanent public URL slug. Correcting a title must not
 silently change the ID.
 
 Permanent public citation numbers live in `app/data/problem-numbers.ts`.
-Maintainers assign the next unused number after accepting a new record. Never
-renumber an existing problem, reuse a retired number, or derive a number from
-alphabetical or display order. Existing records should be cited as `PPL 017`,
-not by their current position in a filtered list.
+The founding 177-entry launch baseline is frozen. Maintainers assign the next
+unused number after accepting a new record. Never renumber a launch-baseline
+problem, reuse a retired number, or derive a future number from alphabetical or
+display order. Existing records should be cited as `PPL 017`, not by their
+current position in a filtered list.
 
 Each record should state:
 

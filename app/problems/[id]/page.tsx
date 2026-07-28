@@ -15,6 +15,7 @@ import {
   SITE_URL,
   ageLabel,
   certaintyLabel,
+  compareProblemTitles,
   correctionUrl,
   formatCatalogId,
   humanizeMath,
@@ -123,7 +124,7 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
         (entry.field === problem.field ||
           (!!problem.collection && entry.collection === problem.collection)),
     )
-    .sort((a, b) => topRewardUsd(b) - topRewardUsd(a) || a.title.localeCompare(b.title))
+    .sort((a, b) => topRewardUsd(b) - topRewardUsd(a) || compareProblemTitles(a, b))
     .slice(0, 3);
   const participationUrl =
     problem.rulesUrl ||

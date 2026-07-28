@@ -6,6 +6,25 @@ export const REPOSITORY_URL = "https://github.com/rishigajjala/math-prize-proble
 export const CATALOG_YEAR = 2026;
 export { formatCatalogId };
 
+const naturalTextCollator = new Intl.Collator("en", {
+  usage: "sort",
+  numeric: true,
+  sensitivity: "variant",
+});
+
+export function compareNaturalText(left: string, right: string) {
+  const naturalOrder = naturalTextCollator.compare(left, right);
+  if (naturalOrder !== 0) return naturalOrder;
+  return left < right ? -1 : left > right ? 1 : 0;
+}
+
+export function compareProblemTitles(left: PrizeProblem, right: PrizeProblem) {
+  return (
+    compareNaturalText(left.title, right.title) ||
+    left.catalogNumber - right.catalogNumber
+  );
+}
+
 export const verificationLabel: Record<Verification, string> = {
   verified: "Verified open",
   "source-stated": "Source-stated",

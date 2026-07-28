@@ -47,6 +47,24 @@ test("exports the catalog at the custom-domain root", () => {
         `/problems/${String(index + 1).padStart(3, "0")}/`,
     ),
   );
+
+  const cardTitles = Array.from(
+    html.matchAll(/<h3><a[^>]*>([^<]+)<\/a><\/h3>/g),
+    (match) => match[1],
+  );
+  const erdosNumbers = cardTitles
+    .filter((title) => title.startsWith("Erdős Problem #"))
+    .map((title) => Number(title.match(/#(\d+)/)?.[1]));
+  assert.deepEqual(
+    erdosNumbers,
+    [...erdosNumbers].sort((a, b) => a - b),
+    "A–Z uses natural numeric order for numbered problem titles",
+  );
+  assert.ok(
+    cardTitles.findIndex((title) => title.startsWith("Kimberling #2 ·")) <
+      cardTitles.findIndex((title) => title.startsWith("Kimberling #10 ·")),
+    "natural title sorting applies outside the Erdős collection",
+  );
 });
 
 test("exports all 177 permanent problem pages", () => {
@@ -101,6 +119,8 @@ test("keeps all 177 legacy slug pages as aliases to numbered pages", () => {
 
   assert.match(readOutput("problems/005/index.html"), /Beal conjecture/);
   assert.match(readOutput("problems/033/index.html"), /Erdős Problem #1/);
+  assert.match(readOutput("problems/035/index.html"), /Erdős Problem #1029/);
+  assert.match(readOutput("problems/036/index.html"), /Erdős Problem #104/);
   assert.match(readOutput("problems/109/index.html"), /Krenn-Gu conjecture/);
   assert.match(readOutput("problems/138/index.html"), /Riemann hypothesis/);
   assert.match(readOutput("problems/177/index.html"), /Yang–Mills existence and mass gap/);

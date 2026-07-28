@@ -13,6 +13,8 @@ import {
 import {
   REPOSITORY_URL,
   ageLabel,
+  compareNaturalText,
+  compareProblemTitles,
   formatCatalogId,
   humanizeMath,
   problemPath,
@@ -102,7 +104,10 @@ export default function Home() {
   const [sort, setSort] = useState<SortMode>("title");
 
   const fields = useMemo(
-    () => ["All fields", ...Array.from(new Set(problems.map((item) => item.field))).sort()],
+    () => [
+      "All fields",
+      ...Array.from(new Set(problems.map((item) => item.field))).sort(compareNaturalText),
+    ],
     [],
   );
 
@@ -138,9 +143,9 @@ export default function Home() {
       if (sort === "oldest") return (a.openSince || 9999) - (b.openSince || 9999);
       if (sort === "newest") return (b.openSince || 0) - (a.openSince || 0);
       if (sort === "references") {
-        return referenceCount(b) - referenceCount(a) || a.title.localeCompare(b.title);
+        return referenceCount(b) - referenceCount(a) || compareProblemTitles(a, b);
       }
-      return a.title.localeCompare(b.title);
+      return compareProblemTitles(a, b);
     });
   }, [query, family, field, verification, sort]);
 

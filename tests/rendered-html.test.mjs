@@ -63,6 +63,19 @@ test("server-renders the 177-problem ledger with permanent links", async () => {
     [...paths].sort(),
     Array.from({ length: 177 }, (_, index) => `/problems/${String(index + 1).padStart(3, "0")}`),
   );
+
+  const cardTitles = Array.from(
+    html.matchAll(/<h3><a[^>]*>([^<]+)<\/a><\/h3>/g),
+    (match) => match[1],
+  );
+  const erdosNumbers = cardTitles
+    .filter((title) => title.startsWith("Erdős Problem #"))
+    .map((title) => Number(title.match(/#(\d+)/)?.[1]));
+  assert.deepEqual(
+    erdosNumbers,
+    [...erdosNumbers].sort((a, b) => a - b),
+    "A–Z uses natural numeric order for numbered problem titles",
+  );
 });
 
 test("renders numbered pages and preserves legacy aliases", async () => {

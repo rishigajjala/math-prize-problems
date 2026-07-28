@@ -40,7 +40,6 @@ const verificationNote: Record<PrizeProblem["verification"], string> = {
 };
 
 export const dynamicParams = false;
-const titleOrderedProblems = [...problems].sort(compareProblemTitles);
 
 export function generateStaticParams() {
   return problems.flatMap((problem) => [
@@ -114,10 +113,9 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
 
   const catalogId = formatCatalogId(problem.catalogNumber);
   const reward = topReward(problem);
-  const index = titleOrderedProblems.findIndex((entry) => entry.id === problem.id);
-  const previous = index > 0 ? titleOrderedProblems[index - 1] : null;
-  const next =
-    index < titleOrderedProblems.length - 1 ? titleOrderedProblems[index + 1] : null;
+  const index = problems.findIndex((entry) => entry.id === problem.id);
+  const previous = index > 0 ? problems[index - 1] : null;
+  const next = index < problems.length - 1 ? problems[index + 1] : null;
   const references = collectReferences(problem);
   const related = problems
     .filter(

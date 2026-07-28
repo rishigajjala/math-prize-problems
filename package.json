@@ -10,8 +10,8 @@
     "build": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext build",
     "build:pages": "next build --webpack",
     "start": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext start",
-    "test": "pnpm run build && node --test tests/problem-number-registry.test.mjs tests/rendered-html.test.mjs",
-    "test:pages": "node --test tests/problem-number-registry.test.mjs tests/static-export.test.mjs",
+    "test": "pnpm run build && node --test tests/natural-sort.test.mjs tests/problem-number-registry.test.mjs tests/rendered-html.test.mjs",
+    "test:pages": "node --test tests/natural-sort.test.mjs tests/problem-number-registry.test.mjs tests/static-export.test.mjs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "db:generate": "drizzle-kit generate"
   },

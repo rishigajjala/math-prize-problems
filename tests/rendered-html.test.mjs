@@ -46,7 +46,11 @@ test("server-renders the 177-problem ledger with permanent links", async () => {
   assert.match(html, /PPL 001/);
   assert.match(html, /PPL 177/);
   assert.match(html, /PPL numbers are identifiers, not ranks\./);
-  assert.match(html, /<option value="title" selected="">Title · A to Z<\/option>/);
+  assert.match(
+    html,
+    /<option value="ppl" selected="">PPL number · low first<\/option>/,
+  );
+  assert.match(html, /<option value="title">Title · A to Z<\/option>/);
   assert.match(html, />177</);
   assert.match(html, /Riemann hypothesis/);
   assert.match(html, /Website maintained by/);
@@ -65,32 +69,14 @@ test("server-renders the 177-problem ledger with permanent links", async () => {
     Array.from({ length: 177 }, (_, index) => `/problems/${String(index + 1).padStart(3, "0")}`),
   );
 
-  const cardTitles = Array.from(
-    html.matchAll(/<h3><a[^>]*>([^<]+)<\/a><\/h3>/g),
-    (match) => match[1],
-  );
   const cardIds = Array.from(
     html.matchAll(/<a[^>]*class="catalog-number"[^>]*>PPL (\d{3})<\/a>/g),
     (match) => Number(match[1]),
   );
-  const launchCardIds = cardIds.filter((catalogNumber) => catalogNumber <= 177);
   assert.deepEqual(
-    [...launchCardIds].sort((a, b) => a - b),
+    cardIds,
     Array.from({ length: 177 }, (_, index) => index + 1),
-    "the randomized launch IDs remain a complete 1–177 permutation",
-  );
-  assert.notDeepEqual(
-    launchCardIds,
-    Array.from({ length: 177 }, (_, index) => index + 1),
-    "PPL IDs are independent of the A–Z display order",
-  );
-  const erdosNumbers = cardTitles
-    .filter((title) => title.startsWith("Erdős Problem #"))
-    .map((title) => Number(title.match(/#(\d+)/)?.[1]));
-  assert.deepEqual(
-    erdosNumbers,
-    [...erdosNumbers].sort((a, b) => a - b),
-    "A–Z uses natural numeric order for numbered problem titles",
+    "PPL 001–177 is the default catalog order",
   );
 });
 

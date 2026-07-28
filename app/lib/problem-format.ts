@@ -1,22 +1,11 @@
 import type { Certainty, PrizeProblem, Verification } from "../data/problems";
 import { catalogSlug, formatCatalogId } from "../data/problem-numbers";
+import { compareNaturalText } from "./natural-sort.mjs";
 
 export const SITE_URL = "https://prizeproblems.org";
 export const REPOSITORY_URL = "https://github.com/rishigajjala/math-prize-problems";
 export const CATALOG_YEAR = 2026;
-export { formatCatalogId };
-
-const naturalTextCollator = new Intl.Collator("en", {
-  usage: "sort",
-  numeric: true,
-  sensitivity: "variant",
-});
-
-export function compareNaturalText(left: string, right: string) {
-  const naturalOrder = naturalTextCollator.compare(left, right);
-  if (naturalOrder !== 0) return naturalOrder;
-  return left < right ? -1 : left > right ? 1 : 0;
-}
+export { compareNaturalText, formatCatalogId };
 
 export function compareProblemTitles(left: PrizeProblem, right: PrizeProblem) {
   return (

@@ -21,7 +21,7 @@ Prize Problem Ledger turns those fragments into an auditable public collection:
 - separate labels for verified, source-stated, renewal-pending, and
   sponsor-reconfirmation records;
 - direct links to primary rules and scholarly references;
-- search and sorting by prize value, time open, and reference depth.
+- search and sorting by PPL number, title, prize value, time open, and reference depth.
 
 The reward is an invitation. The mathematics is the point.
 

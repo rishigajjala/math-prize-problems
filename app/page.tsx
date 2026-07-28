@@ -21,7 +21,14 @@ import {
   verificationLabel,
 } from "./lib/problem-format";
 
-type SortMode = "prize" | "prize-low" | "oldest" | "newest" | "references" | "title";
+type SortMode =
+  | "ppl"
+  | "prize"
+  | "prize-low"
+  | "oldest"
+  | "newest"
+  | "references"
+  | "title";
 type FamilyFilter = "All" | PrizeProblem["family"];
 type VerificationFilter = "all" | Verification;
 
@@ -101,7 +108,7 @@ export default function Home() {
   const [family, setFamily] = useState<FamilyFilter>("All");
   const [field, setField] = useState("All fields");
   const [verification, setVerification] = useState<VerificationFilter>("all");
-  const [sort, setSort] = useState<SortMode>("title");
+  const [sort, setSort] = useState<SortMode>("ppl");
 
   const fields = useMemo(
     () => [
@@ -138,6 +145,7 @@ export default function Home() {
     });
 
     return filtered.sort((a, b) => {
+      if (sort === "ppl") return a.catalogNumber - b.catalogNumber;
       if (sort === "prize") return topRewardUsd(b) - topRewardUsd(a);
       if (sort === "prize-low") return topRewardUsd(a) - topRewardUsd(b);
       if (sort === "oldest") return (a.openSince || 9999) - (b.openSince || 9999);
@@ -163,7 +171,7 @@ export default function Home() {
     setFamily("All");
     setField("All fields");
     setVerification("all");
-    setSort("title");
+    setSort("ppl");
   };
 
   return (
@@ -279,9 +287,9 @@ export default function Home() {
               <h2>Find a problem worth your time.</h2>
             </div>
             <p>
-              Search by PPL number or exact statement, compare reward terms, sort by age,
-              estimated prize value or reference depth, then share a permanent problem ID.
-              PPL numbers are identifiers, not ranks.
+              Search by PPL number or exact statement, compare reward terms, sort by PPL
+              number, title, age, estimated prize value or reference depth, then share a
+              permanent problem ID. PPL numbers are identifiers, not ranks.
             </p>
           </div>
 
@@ -348,6 +356,7 @@ export default function Home() {
                   value={sort}
                   onChange={(event) => setSort(event.target.value as SortMode)}
                 >
+                  <option value="ppl">PPL number · low first</option>
                   <option value="title">Title · A to Z</option>
                   <option value="prize">Prize value · high first</option>
                   <option value="prize-low">Prize value · low first</option>

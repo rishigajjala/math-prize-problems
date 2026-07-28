@@ -28,9 +28,11 @@ The reward is an invitation. The mathematics is the point.
 ## Permanent problem IDs
 
 Every accepted entry receives an append-only identifier such as **PPL 017**.
-The founding 177-entry registry was finalized once in natural title order
-before launch. That launch mapping is the immutable baseline: its numbers are
-never changed or reused, and new entries receive the next unused number.
+The founding 177 identifiers were randomized once, independently of title,
+field, reward, and display order; **PPL 007** was reserved for the Krenn–Gu
+conjecture. PPL numbers are identifiers, not ranks. The launch mapping is the
+immutable baseline: its numbers are never changed or reused, and new entries
+receive the next unused number.
 
 Use the short form in papers, posts, and conversations:
 

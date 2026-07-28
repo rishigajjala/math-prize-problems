@@ -45,6 +45,7 @@ test("server-renders the 177-problem ledger with permanent links", async () => {
   assert.match(html, /Search by PPL number or exact statement, compare reward terms/);
   assert.match(html, /PPL 001/);
   assert.match(html, /PPL 177/);
+  assert.match(html, /PPL numbers are identifiers, not ranks\./);
   assert.match(html, /<option value="title" selected="">Title · A to Z<\/option>/);
   assert.match(html, />177</);
   assert.match(html, /Riemann hypothesis/);
@@ -72,10 +73,16 @@ test("server-renders the 177-problem ledger with permanent links", async () => {
     html.matchAll(/<a[^>]*class="catalog-number"[^>]*>PPL (\d{3})<\/a>/g),
     (match) => Number(match[1]),
   );
+  const launchCardIds = cardIds.filter((catalogNumber) => catalogNumber <= 177);
   assert.deepEqual(
-    cardIds.filter((catalogNumber) => catalogNumber <= 177),
+    [...launchCardIds].sort((a, b) => a - b),
     Array.from({ length: 177 }, (_, index) => index + 1),
-    "the 177 launch PPL IDs use their frozen natural A–Z order",
+    "the randomized launch IDs remain a complete 1–177 permutation",
+  );
+  assert.notDeepEqual(
+    launchCardIds,
+    Array.from({ length: 177 }, (_, index) => index + 1),
+    "PPL IDs are independent of the A–Z display order",
   );
   const erdosNumbers = cardTitles
     .filter((title) => title.startsWith("Erdős Problem #"))
@@ -89,21 +96,29 @@ test("server-renders the 177-problem ledger with permanent links", async () => {
 
 test("renders numbered pages and preserves legacy aliases", async () => {
   const cases = [
-    { paths: ["/problems/138", "/problems/riemann-hypothesis"], id: "PPL 138" },
-    { paths: ["/problems/033", "/problems/erdos-1"], id: "PPL 033" },
     {
-      paths: ["/problems/051", "/problems/erdos-104"],
-      id: "PPL 051",
+      paths: ["/problems/056", "/problems/riemann-hypothesis"],
+      id: "PPL 056",
+      title: "Riemann hypothesis",
+    },
+    {
+      paths: ["/problems/054", "/problems/erdos-1"],
+      id: "PPL 054",
+      title: "Erdős Problem #1",
+    },
+    {
+      paths: ["/problems/077", "/problems/erdos-104"],
+      id: "PPL 077",
       title: "Erdős Problem #104",
     },
     {
-      paths: ["/problems/082", "/problems/erdos-1029"],
-      id: "PPL 082",
+      paths: ["/problems/027", "/problems/erdos-1029"],
+      id: "PPL 027",
       title: "Erdős Problem #1029",
     },
     {
-      paths: ["/problems/109", "/problems/krenn-inherited-vertex-coloring"],
-      id: "PPL 109",
+      paths: ["/problems/007", "/problems/krenn-inherited-vertex-coloring"],
+      id: "PPL 007",
       title: "Krenn-Gu conjecture",
     },
   ];
@@ -153,8 +168,8 @@ test("sitemap lists the catalog and all 177 problem pages", async () => {
   assert.equal(response.status, 200);
   const xml = await response.text();
   assert.equal((xml.match(/<url>/g) || []).length, 178);
-  assert.match(xml, /\/problems\/138\//);
-  assert.match(xml, /\/problems\/033\//);
+  assert.match(xml, /\/problems\/007\//);
+  assert.match(xml, /\/problems\/056\//);
   assert.doesNotMatch(xml, /\/problems\/riemann-hypothesis/);
   assert.doesNotMatch(xml, /\/problems\/erdos-1/);
 });

@@ -281,6 +281,7 @@ export default function Home() {
             <p>
               Search by PPL number or exact statement, compare reward terms, sort by age,
               estimated prize value or reference depth, then share a permanent problem ID.
+              PPL numbers are identifiers, not ranks.
             </p>
           </div>
 

@@ -4,9 +4,9 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 const EXPECTED_REGISTRY_HASH =
-  "af03a9a1ef8c988af811c392c171f48f3e28ac4d8ca642f18a92cce9ef74ef66";
+  "a8ad45cd63bde896ab0f24817699b1367e8fe8b205db52337cbbabba57d068e8";
 
-test("locks the 177-entry launch PPL assignments", () => {
+test("locks the randomized 177-entry launch PPL assignments", () => {
   const source = readFileSync(
     new URL("../app/data/problem-numbers.ts", import.meta.url),
     "utf8",
@@ -34,11 +34,10 @@ test("locks the 177-entry launch PPL assignments", () => {
   assert.equal(
     registryHash,
     EXPECTED_REGISTRY_HASH,
-    "A launch-baseline PPL assignment changed. Append new entries; never renumber or reuse an ID.",
+    "A randomized launch-baseline PPL assignment changed. Append new entries; never reshuffle, renumber, or reuse an ID.",
   );
-  assert.ok(
-    canonicalRegistry.includes("krenn-inherited-vertex-coloring:109"),
-  );
-  assert.ok(canonicalRegistry.includes("erdos-104:51"));
-  assert.ok(canonicalRegistry.includes("erdos-1029:82"));
+  assert.ok(canonicalRegistry.includes("krenn-inherited-vertex-coloring:7"));
+  assert.ok(canonicalRegistry.includes("erdos-104:77"));
+  assert.ok(canonicalRegistry.includes("erdos-1029:27"));
+  assert.match(source, /ppl-fixed-random-v1:900b2e4e9f95b19f6e889221aa2b0e8d7b73dbb4/);
 });

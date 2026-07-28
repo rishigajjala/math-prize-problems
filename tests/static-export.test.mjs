@@ -17,6 +17,7 @@ test("exports the catalog at the custom-domain root", () => {
   assert.match(html, /Prize Problem Ledger \(PPL\)/);
   assert.match(html, /PPL 001/);
   assert.match(html, /PPL 177/);
+  assert.match(html, /PPL numbers are identifiers, not ranks\./);
   assert.match(html, /<option value="title" selected="">Title · A to Z<\/option>/);
   assert.match(html, /Website maintained by/);
   assert.match(html, /Rishikesh Gajjala/);
@@ -56,10 +57,16 @@ test("exports the catalog at the custom-domain root", () => {
     html.matchAll(/<a[^>]*class="catalog-number"[^>]*>PPL (\d{3})<\/a>/g),
     (match) => Number(match[1]),
   );
+  const launchCardIds = cardIds.filter((catalogNumber) => catalogNumber <= 177);
   assert.deepEqual(
-    cardIds.filter((catalogNumber) => catalogNumber <= 177),
+    [...launchCardIds].sort((a, b) => a - b),
     Array.from({ length: 177 }, (_, index) => index + 1),
-    "the 177 launch PPL IDs use their frozen natural A–Z order",
+    "the randomized launch IDs remain a complete 1–177 permutation",
+  );
+  assert.notDeepEqual(
+    launchCardIds,
+    Array.from({ length: 177 }, (_, index) => index + 1),
+    "PPL IDs are independent of the A–Z display order",
   );
   const erdosNumbers = cardTitles
     .filter((title) => title.startsWith("Erdős Problem #"))
@@ -126,30 +133,31 @@ test("keeps all 177 legacy slug pages as aliases to numbered pages", () => {
     assert.equal(canonicalId, visibleId, `mismatched alias for ${id}`);
   }
 
-  assert.match(readOutput("problems/005/index.html"), /Beal conjecture/);
-  assert.match(readOutput("problems/033/index.html"), /Erdős Problem #1/);
-  assert.match(readOutput("problems/051/index.html"), /Erdős Problem #104/);
-  assert.match(readOutput("problems/082/index.html"), /Erdős Problem #1029/);
-  assert.match(readOutput("problems/097/index.html"), /Kimberling #2/);
-  assert.match(readOutput("problems/109/index.html"), /Krenn-Gu conjecture/);
-  assert.match(readOutput("problems/129/index.html"), /Poseidon-31/);
-  assert.match(readOutput("problems/138/index.html"), /Riemann hypothesis/);
-  assert.match(readOutput("problems/143/index.html"), /Shallit #2/);
-  assert.match(readOutput("problems/177/index.html"), /Yang–Mills existence and mass gap/);
+  assert.match(readOutput("problems/126/index.html"), /Beal conjecture/);
+  assert.match(readOutput("problems/054/index.html"), /Erdős Problem #1/);
+  assert.match(readOutput("problems/077/index.html"), /Erdős Problem #104/);
+  assert.match(readOutput("problems/027/index.html"), /Erdős Problem #1029/);
+  assert.match(readOutput("problems/134/index.html"), /Kimberling #2/);
+  assert.match(readOutput("problems/007/index.html"), /Krenn-Gu conjecture/);
+  assert.match(readOutput("problems/167/index.html"), /Poseidon-31/);
+  assert.match(readOutput("problems/056/index.html"), /Riemann hypothesis/);
+  assert.match(readOutput("problems/146/index.html"), /Shallit #2/);
+  assert.match(readOutput("problems/069/index.html"), /Yang–Mills existence and mass gap/);
   assert.match(
     readOutput("problems/riemann-hypothesis/index.html"),
-    new RegExp(`rel="canonical" href="${pagesUrl}/problems/138/"`),
+    new RegExp(`rel="canonical" href="${pagesUrl}/problems/056/"`),
   );
   assert.match(
     readOutput("problems/krenn-inherited-vertex-coloring/index.html"),
-    new RegExp(`rel="canonical" href="${pagesUrl}/problems/109/"`),
+    new RegExp(`rel="canonical" href="${pagesUrl}/problems/007/"`),
   );
 });
 
 test("exports GitHub Pages sitemap, robots and 404 files", () => {
   const sitemap = readOutput("sitemap.xml");
   assert.equal((sitemap.match(/<url>/g) || []).length, 178);
-  assert.match(sitemap, new RegExp(`${pagesUrl}/problems/138/`));
+  assert.match(sitemap, new RegExp(`${pagesUrl}/problems/007/`));
+  assert.match(sitemap, new RegExp(`${pagesUrl}/problems/056/`));
   assert.doesNotMatch(sitemap, /\/problems\/riemann-hypothesis\//);
   assert.doesNotMatch(sitemap, /chatgpt\.site/);
 
